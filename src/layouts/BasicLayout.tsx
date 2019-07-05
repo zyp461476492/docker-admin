@@ -13,11 +13,8 @@ import React, { useEffect } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
-
-import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState, Dispatch } from '@/models/connect';
-import { isAntDesignPro } from '@/utils/utils';
 import logo from '../assets/logo.svg';
 
 export interface BasicLayoutProps extends ProLayoutProps {
@@ -31,43 +28,6 @@ export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
   breadcrumbNameMap: {
     [path: string]: MenuDataItem;
   };
-};
-
-/**
- * use Authorized check all menu item
- */
-const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
-  menuList.map(item => {
-    const localItem = {
-      ...item,
-      children: item.children ? menuDataRender(item.children) : [],
-    };
-    return Authorized.check(item.authority, localItem, null) as MenuDataItem;
-  });
-
-const footerRender: BasicLayoutProps['footerRender'] = (_, defaultDom) => {
-  if (!isAntDesignPro()) {
-    return defaultDom;
-  }
-  return (
-    <>
-      {defaultDom}
-      <div
-        style={{
-          padding: '0px 24px 24px',
-          textAlign: 'center',
-        }}
-      >
-        <a href="https://www.netlify.com" target="_blank" rel="noopener noreferrer">
-          <img
-            src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"
-            width="82px"
-            alt="netlify logo"
-          />
-        </a>
-      </div>
-    </>
-  );
 };
 
 const BasicLayout: React.FC<BasicLayoutProps> = props => {
@@ -117,10 +77,10 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         },
         ...routers,
       ]}
-      footerRender={footerRender}
-      menuDataRender={menuDataRender}
-      formatMessage={formatMessage}
+      footerRender={false}
       menuRender={false}
+      formatMessage={formatMessage}
+
       rightContentRender={rightProps => <RightContent {...rightProps} />}
       {...props}
       {...settings}

@@ -296,14 +296,11 @@ class BasicList extends Component<
           <div className={styles.standardList}>
             <Card bordered={false}>
               <Row>
-                <Col sm={8} xs={24}>
-                  <Info title="我的待办" value="8个任务" bordered />
+                <Col sm={12} xs={24}>
+                  <Info title="资源总数" value="115个" bordered />
                 </Col>
-                <Col sm={8} xs={24}>
-                  <Info title="本周任务平均处理时间" value="32分钟" bordered />
-                </Col>
-                <Col sm={8} xs={24}>
-                  <Info title="本周完成任务数" value="24个任务" />
+                <Col sm={12} xs={24}>
+                  <Info title="本周新增资源数" value="7个" />
                 </Col>
               </Row>
             </Card>
