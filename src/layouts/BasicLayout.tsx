@@ -120,6 +120,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       footerRender={footerRender}
       menuDataRender={menuDataRender}
       formatMessage={formatMessage}
+      menuRender={false}
       rightContentRender={rightProps => <RightContent {...rightProps} />}
       {...props}
       {...settings}
