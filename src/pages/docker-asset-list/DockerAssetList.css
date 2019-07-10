@@ -1,0 +1,13 @@
+.card-container {
+    position: absolute;
+    top: 5%;
+    bottom: 5%;
+    left: 5%;
+    right: 5%;
+    background-color: #FFFFFF;
+    display: block;
+}
+
+.card-body {
+    height: 90%;
+}

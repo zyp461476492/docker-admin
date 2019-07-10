@@ -1,16 +1,14 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Button } from 'antd';
+import { LocaleProvider } from 'antd';
+import DockerAssetList from './pages/docker-asset-list/DockerAssetList';
+import zhCN from 'antd/es/locale-provider/zh_CN';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
-      <Button type="primary">Hello Antd</Button>
-    </div>
+    <LocaleProvider locale={zhCN}>
+      <DockerAssetList />
+    </LocaleProvider>
   );
 }
 
