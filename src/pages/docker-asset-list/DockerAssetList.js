@@ -141,50 +141,68 @@ const data = [
     }
 ];
 
-const cardTitle = 'Docker admin';
-
 const pagination = {
-    defaultPageSize: 4
+    defaultPageSize: 5
 };
+
+function StatusTip(props) {
+    return (
+        <div className="tip">
+            <span>{props.title}</span>
+            <p>{props.value}</p>
+        </div>
+    )
+}
 
 class DockerAssetList extends React.Component {
     render() {
+        const onlineTip = StatusTip({ title: '在线数量', value: 100 });
+        const offlineTip = StatusTip({ title: '离线数量', value: 100 });
+        const syncDateTip = StatusTip({ title: '同步时间', value: new Date().toLocaleString() });
         return (
-            <Card className="card-container" title={cardTitle} bordered={false} >
-                <Row type="flex">
-                    <Col span={8}>
-                        <p>在线数量</p>
-                        <p>100</p>
-                    </Col>
-                    <Col span={8}>
-                        <p>失联数量</p>
-                        <p>100</p>
-                    </Col>
-                    <Col span={8}>
-                        <p>同步时间</p>
-                        <p>2019/07/10 11:30 </p>
-                    </Col>
+            <div>
+                <div className="container-header">
+                    <Row type="flex">
+                        <Col span={8}>
+                            <Card bordered={false}>
+                                {onlineTip}
+                            </Card>
+                            <em></em>
+                        </Col>
+                        <Col span={8}>
+                            <Card bordered={false}>
+                                {offlineTip}
+                            </Card>
+                            <em></em>
+                        </Col>
+                        <Col span={8}>
+                            <Card bordered={false}>
+                                {syncDateTip}
+                            </Card>
+                        </Col>
+                    </Row>
+                </div>
+                <div className="container-body">
+                    <Card bordered={false} >
+                        <Row>
+                            <Col span={24}>
+                                <Card
+                                    size="small"
+                                    bordered={false}
+                                    extra={
+                                        <ButtonGroup>
+                                            <Button type="primary">新增</Button>
+                                        </ButtonGroup>
+                                    }
+                                >
+                                    <Table pagination={pagination} columns={columns} dataSource={data} />
+                                </Card>
+                            </Col>
+                        </Row>
+                    </Card>
+                </div>
+            </div>
 
-                </Row>
-                <Divider />
-                <Row>
-                    <Col span={24}>
-                        <Card
-                            size="small"
-                            bordered={false}
-                            extra={
-                                <ButtonGroup>
-                                    <Button type="primary">新增</Button>
-                                    <Button>修改</Button>
-                                    <Button type="danger">删除</Button>
-                                </ButtonGroup>
-                            }
-                        >
-                            <Table pagination={pagination} columns={columns} dataSource={data} />
-                        </Card>
-                    </Col>
-                </Row>
-            </Card>
         )
     }
 }
