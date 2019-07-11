@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row, Col, Table, Tag, Divider, Button } from 'antd';
+import { Tooltip, Card, Row, Col, Table, Tag, Divider, Button } from 'antd';
 import './DockerAssetList.css';
 
 const ButtonGroup = Button.Group;
@@ -148,7 +148,9 @@ const pagination = {
 function StatusTip(props) {
     return (
         <div className="tip">
-            <span>{props.title}</span>
+            <Tooltip title={props.desc}>
+                <span>{props.title}</span>
+            </Tooltip>
             <p>{props.value}</p>
         </div>
     )
@@ -156,9 +158,27 @@ function StatusTip(props) {
 
 class DockerAssetList extends React.Component {
     render() {
-        const onlineTip = StatusTip({ title: '在线数量', value: 100 });
-        const offlineTip = StatusTip({ title: '离线数量', value: 100 });
-        const syncDateTip = StatusTip({ title: '同步时间', value: new Date().toLocaleString() });
+        const onlineTip = StatusTip(
+            {
+                title: '在线数量',
+                desc: '同步时可以访问到的资源数量',
+                value: 100
+            }
+        );
+        const offlineTip = StatusTip(
+            {
+                title: '离线数量',
+                desc: '同步时无法访问资源的数量',
+                value: 100
+            }
+        );
+        const syncDateTip = StatusTip(
+            {
+                title: '同步时间',
+                desc: '最新同步时间',
+                value: new Date().toLocaleString()
+            }
+        );
         return (
             <div>
                 <div className="container-header">
