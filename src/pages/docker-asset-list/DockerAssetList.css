@@ -50,3 +50,7 @@
 .btn-block Button {
     margin-left: 5px;
 }
+
+.form-input {
+    width: 75%;
+}

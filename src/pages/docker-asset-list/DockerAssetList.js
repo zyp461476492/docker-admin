@@ -1,5 +1,10 @@
 import React from 'react';
-import { Tooltip, Card, Row, Col, Table, Tag, Button, Form, Modal } from 'antd';
+import {
+    Tooltip, Card, Row,
+    Col, Table, Tag,
+    Button, Form, Modal,
+    Input, message
+} from 'antd';
 import './DockerAssetList.css';
 
 const defaultPageSize = 5;
@@ -63,10 +68,78 @@ function StatusTip(props) {
     )
 }
 
+const DockerAssetForm = Form.create({ name: 'xxx' })(
+    class extends React.Component {
+        render() {
+            const { visible, title, onCancel, onCreate, form } = this.props;
+            const { getFieldDecorator } = form;
+            const labelCol = { span: 4 };
+            return (
+                <Modal
+                    visible={visible}
+                    title={title}
+                    okText="Create"
+                    onCancel={onCancel}
+                    onOk={onCreate}
+                >
+                    <Form
+                        labelAlign="right"
+                        labelCol={labelCol}>
+                        <Form.Item label="名称">
+                            {getFieldDecorator('assetName', {
+                                rules: [{ required: true, message: '请输入资源名称' }],
+                            })(<Input className="form-input" />)}
+                        </Form.Item>
+                        <Form.Item label="IP">
+                            {getFieldDecorator('ip', {
+                                rules: [{ required: true, message: '请输入IP' }],
+                            })(<Input className="form-input" />)}
+                        </Form.Item>
+                        <Form.Item label="端口">
+                            {getFieldDecorator('port', {
+                                rules: [{ required: true, message: '请输入端口' }],
+                            })(<Input className="form-input" />)}
+                        </Form.Item>
+                        <Form.Item label="API">
+                            {getFieldDecorator('apiVersion', {
+                                rules: [{ required: true, message: '请输入API版本' }],
+                            })(<Input className="form-input" />)}
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            );
+        }
+    }
+);
 
 class DockerAssetList extends React.Component {
+
     state = {
+        visible: false,
         selectedRowKeys: []
+    };
+
+    showModal = () => {
+        this.setState({ visible: true });
+    };
+
+    handleCancel = () => {
+        this.setState({ visible: false });
+    };
+
+    handleCreate = () => {
+        const { form } = this.formRef.props;
+        form.validateFields((err, values) => {
+            if (err) {
+                return;
+            }
+            message.info(JSON.stringify(values));
+            values.status = '0';
+            mockData.push(values)
+            console.log('Received values of form: ', values);
+            form.resetFields();
+            this.setState({ visible: false });
+        });
     };
 
     selectRow = (record) => {
@@ -81,6 +154,10 @@ class DockerAssetList extends React.Component {
 
     onSelectedRowKeysChange = (selectedRowKeys) => {
         this.setState({ selectedRowKeys });
+    };
+
+    saveFormRef = formRef => {
+        this.formRef = formRef;
     };
 
     render() {
@@ -145,7 +222,14 @@ class DockerAssetList extends React.Component {
                                     bordered={false}
                                     extra={
                                         <div className="btn-block">
-                                            <Button icon="plus">新增</Button>
+                                            <Button icon="plus" onClick={this.showModal}>新增</Button>
+                                            <DockerAssetForm
+                                                wrappedComponentRef={this.saveFormRef}
+                                                title="新增docker资源"
+                                                visible={this.state.visible}
+                                                onCancel={this.handleCancel}
+                                                onCreate={this.handleCreate}
+                                            />
                                             <Button icon="edit">修改</Button>
                                             <Button icon="delete" type="danger">删除</Button>
                                             <Button icon="info-circle">详情</Button>
