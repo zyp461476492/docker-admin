@@ -18,6 +18,15 @@
     background-color: #FFFFFF;
 }
 
+.container-header em {
+    position: absolute;
+    top: 10%;
+    right: 0;
+    width: 1px;
+    height: 80%;
+    background-color: #e8e8e8;
+}
+
 .tip {
     position: relative;
     text-align: center;
@@ -38,11 +47,6 @@
     line-height: 32px;
 }
 
-.container-header em {
-    position: absolute;
-    top: 10%;
-    right: 0;
-    width: 1px;
-    height: 80%;
-    background-color: #e8e8e8;
+.btn-block Button {
+    margin-left: 5px;
 }

@@ -1,149 +1,56 @@
 import React from 'react';
-import { Tooltip, Card, Row, Col, Table, Tag, Divider, Button } from 'antd';
+import { Tooltip, Card, Row, Col, Table, Tag, Button, Form, Modal } from 'antd';
 import './DockerAssetList.css';
 
-const ButtonGroup = Button.Group;
+const defaultPageSize = 5;
 
 const columns = [
     {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        render: text => <a href="javascript:;">{text}</a>,
+        title: '资源名称',
+        dataIndex: 'assetName',
+        key: 'assetName'
     },
     {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
+        title: 'IP',
+        dataIndex: 'ip',
+        key: 'ip'
     },
     {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
+        title: '端口',
+        dataIndex: 'port',
+        key: 'port'
     },
     {
-        title: 'Tags',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: tags => (
-            <span>
-                {tags.map(tag => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'loser') {
-                        color = 'volcano';
-                    }
-                    return (
-                        <Tag color={color} key={tag}>
-                            {tag.toUpperCase()}
-                        </Tag>
-                    );
-                })}
-            </span>
-        ),
+        title: 'API版本',
+        dataIndex: 'apiVersion',
+        key: 'apiVersion'
     },
     {
-        title: 'Action',
-        key: 'action',
-        render: (text, record) => (
-            <span>
-                <a href="javascript:;">Invite {record.name}</a>
-                <Divider type="vertical" />
-                <a href="javascript:;">Delete</a>
-            </span>
-        ),
-    },
-];
-
-const data = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '4',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '5',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '6',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '7',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '8',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '9',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '10',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '11',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-    {
-        key: '12',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
+        title: '状态',
+        dataIndex: 'status',
+        key: 'status',
+        render: (status) => {
+            const syncTag = <Tag color="green">在线</Tag>
+            const failTag = <Tag color="red">离线</Tag>
+            return status === '1' ? syncTag : failTag;
+        }
     }
 ];
 
-const pagination = {
-    defaultPageSize: 5
-};
+const mockData = [];
+
+for (let i = 0; i < 15; i++) {
+    let obj = {
+        key: i + 1,
+        assetName: 'docker-test' + i,
+        ip: '192.168.1.1' + i,
+        port: '220' + i,
+        apiVersion: '1.048',
+        status: i % 2 === 0 ? '1' : '0'
+    };
+    mockData.push(obj);
+}
+
 
 function StatusTip(props) {
     return (
@@ -156,8 +63,35 @@ function StatusTip(props) {
     )
 }
 
+
 class DockerAssetList extends React.Component {
+    state = {
+        selectedRowKeys: []
+    };
+
+    selectRow = (record) => {
+        const selectedRowKeys = [...this.state.selectedRowKeys];
+        if (selectedRowKeys.indexOf(record.key) >= 0) {
+            selectedRowKeys.splice(selectedRowKeys.indexOf(record.key), 1);
+        } else {
+            selectedRowKeys.push(record.key);
+        }
+        this.setState({ selectedRowKeys });
+    };
+
+    onSelectedRowKeysChange = (selectedRowKeys) => {
+        this.setState({ selectedRowKeys });
+    };
+
     render() {
+        const pagination = {
+            defaultPageSize: defaultPageSize
+        };
+        const { selectedRowKeys } = this.state;
+        const rowSelection = {
+            selectedRowKeys,
+            onChange: this.onSelectedRowKeysChange,
+        };
         const onlineTip = StatusTip(
             {
                 title: '在线数量',
@@ -210,12 +144,27 @@ class DockerAssetList extends React.Component {
                                     size="small"
                                     bordered={false}
                                     extra={
-                                        <ButtonGroup>
-                                            <Button type="primary">新增</Button>
-                                        </ButtonGroup>
+                                        <div className="btn-block">
+                                            <Button icon="plus">新增</Button>
+                                            <Button icon="edit">修改</Button>
+                                            <Button icon="delete" type="danger">删除</Button>
+                                            <Button icon="info-circle">详情</Button>
+                                        </div>
                                     }
                                 >
-                                    <Table pagination={pagination} columns={columns} dataSource={data} />
+                                    <Table
+                                        rowSelection={rowSelection}
+                                        pagination={pagination}
+                                        columns={columns}
+                                        dataSource={mockData}
+                                        onRow={(record) => (
+                                            {
+                                                onClick: () => {
+                                                    this.selectRow(record);
+                                                }
+                                            }
+                                        )}
+                                    />
                                 </Card>
                             </Col>
                         </Row>
