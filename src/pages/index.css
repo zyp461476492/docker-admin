@@ -1,4 +1,4 @@
-.container-header {
+.container_header {
   position: absolute;
   top: 5%;
   left: 5%;
@@ -7,7 +7,7 @@
   display: block;
 }
 
-.container-body {
+.container_body {
   position: absolute;
   top: 20%;
   bottom: 5%;
@@ -18,7 +18,7 @@
   background-color: #FFFFFF;
 }
 
-.container-header em {
+.container_header em {
   position: absolute;
   top: 10%;
   right: 0;
@@ -47,10 +47,10 @@
   line-height: 32px;
 }
 
-.btn-block Button {
+.btn_block Button {
   margin-left: 5px;
 }
 
-.form-input {
+.form_input {
   width: 75%;
 }
