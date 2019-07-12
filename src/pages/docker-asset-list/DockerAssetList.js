@@ -69,11 +69,13 @@ function StatusTip(props) {
 }
 
 const DockerAssetForm = Form.create({ name: 'xxx' })(
+
     class extends React.Component {
         render() {
             const { visible, title, onCancel, onCreate, form } = this.props;
             const { getFieldDecorator } = form;
             const labelCol = { span: 4 };
+
             return (
                 <Modal
                     visible={visible}
@@ -115,11 +117,29 @@ const DockerAssetForm = Form.create({ name: 'xxx' })(
 class DockerAssetList extends React.Component {
 
     state = {
+        formUpadate: false,
         visible: false,
-        selectedRowKeys: []
+        selectedRowKeys: [],
+        selectedRow: []
     };
 
+    handlerAddForm = () => {
+
+    }
+
+    handlerModifyForm = (data) => {
+        console.log(this.state.selectedRowKeys);
+    }
+
+    handlerDelete = () => {
+        console.log(this.state.selectedRow);
+        if (this.state.selectedRowKeys.length <= 0) {
+            message.warning('请选择待删除的数据', 1);
+        }
+    }
+
     showModal = () => {
+        // this.formRef.props.form.setFieldsValue({assetName: 'docker-admin'});
         this.setState({ visible: true });
     };
 
@@ -149,7 +169,7 @@ class DockerAssetList extends React.Component {
         } else {
             selectedRowKeys.push(record.key);
         }
-        this.setState({ selectedRowKeys });
+        this.setState({ selectedRowKeys});
     };
 
     onSelectedRowKeysChange = (selectedRowKeys) => {
@@ -231,7 +251,7 @@ class DockerAssetList extends React.Component {
                                                 onCreate={this.handleCreate}
                                             />
                                             <Button icon="edit">修改</Button>
-                                            <Button icon="delete" type="danger">删除</Button>
+                                            <Button icon="delete" type="danger" onClick={this.handlerDelete}>删除</Button>
                                             <Button icon="info-circle">详情</Button>
                                         </div>
                                     }
