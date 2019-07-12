@@ -5,7 +5,7 @@ import {
     Button, Form, Modal,
     Input, message
 } from 'antd';
-import './common.css';
+import style from './common.css';
 
 const defaultPageSize = 5;
 
@@ -59,7 +59,7 @@ for (let i = 0; i < 15; i++) {
 
 function StatusTip(props) {
     return (
-        <div className="tip">
+        <div className={style.tip}>
             <Tooltip title={props.desc}>
                 <span>{props.title}</span>
             </Tooltip>
@@ -212,7 +212,7 @@ class DockerAssetList extends React.Component {
         );
         return (
             <div>
-                <div className="container-header">
+                <div className={style.container_header}>
                     <Row type="flex">
                         <Col span={8}>
                             <Card bordered={false}>
@@ -233,7 +233,7 @@ class DockerAssetList extends React.Component {
                         </Col>
                     </Row>
                 </div>
-                <div className="container-body">
+                <div className={style.container_body}>
                     <Card bordered={false} >
                         <Row>
                             <Col span={24}>
@@ -241,7 +241,7 @@ class DockerAssetList extends React.Component {
                                     size="small"
                                     bordered={false}
                                     extra={
-                                        <div className="btn-block">
+                                        <div className={style.btn_block}>
                                             <Button icon="plus" onClick={this.showModal}>新增</Button>
                                             <DockerAssetForm
                                                 wrappedComponentRef={this.saveFormRef}
