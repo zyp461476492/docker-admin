@@ -1,8 +1,8 @@
 .container_header {
   position: absolute;
   top: 5%;
-  left: 5%;
-  right: 5%;
+  left: 2%;
+  right: 2%;
   background-color: #FFFFFF;
   display: block;
 }
@@ -11,8 +11,8 @@
   position: absolute;
   top: 20%;
   bottom: 5%;
-  left: 5%;
-  right: 5%;
+  left: 2%;
+  right: 2%;
   margin-top: 10px;
   display: block;
   background-color: #FFFFFF;

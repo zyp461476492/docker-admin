@@ -8,9 +8,9 @@ export default {
       antd: true,
       dva: true,
       dynamicImport: false,
-      title: 'test',
+      title: 'docker admin',
       dll: false,
-      
+
       routes: {
         exclude: [
           /models\//,

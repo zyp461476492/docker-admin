@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'dva';
 import {
     Tooltip, Card, Row,
     Col, Table, Tag,
@@ -90,22 +91,22 @@ const DockerAssetForm = Form.create({ name: 'xxx' })(
                         <Form.Item label="名称">
                             {getFieldDecorator('assetName', {
                                 rules: [{ required: true, message: '请输入资源名称' }],
-                            })(<Input className="form-input" />)}
+                            })(<Input className={style.form_input} />)}
                         </Form.Item>
                         <Form.Item label="IP">
                             {getFieldDecorator('ip', {
                                 rules: [{ required: true, message: '请输入IP' }],
-                            })(<Input className="form-input" />)}
+                            })(<Input className={style.form_input} />)}
                         </Form.Item>
                         <Form.Item label="端口">
                             {getFieldDecorator('port', {
                                 rules: [{ required: true, message: '请输入端口' }],
-                            })(<Input className="form-input" />)}
+                            })(<Input className={style.form_input} />)}
                         </Form.Item>
                         <Form.Item label="API">
                             {getFieldDecorator('apiVersion', {
                                 rules: [{ required: true, message: '请输入API版本' }],
-                            })(<Input className="form-input" />)}
+                            })(<Input className={style.form_input} />)}
                         </Form.Item>
                     </Form>
                 </Modal>
@@ -260,7 +261,7 @@ class DockerAssetList extends React.Component {
                                         rowSelection={rowSelection}
                                         pagination={pagination}
                                         columns={columns}
-                                        dataSource={mockData}
+                                        dataSource={this.props.dataSource}
                                         onRow={(record) => (
                                             {
                                                 onClick: () => {
@@ -280,4 +281,10 @@ class DockerAssetList extends React.Component {
     }
 }
 
-export default DockerAssetList;
+function mapStateToProps(state) {
+    console.log(state);
+    return { dataSource: state.asset.list };
+  }
+
+// export default DockerAssetList;
+export default connect(mapStateToProps)(DockerAssetList);
