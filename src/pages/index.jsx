@@ -133,7 +133,15 @@ class DockerAssetList extends React.Component {
     handlerDelete = () => {
         if (this.state.selectedRowKeys.length <= 0) {
             message.warning('请选择待删除的数据', 1);
+        } else {
+            this.props.dispatch({
+                type: 'asset/remove',
+                payload: {
+                    keys: this.state.selectedRowKeys
+                }
+            });
         }
+        
     }
 
     showModal = () => {

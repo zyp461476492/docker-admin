@@ -1,3 +1,6 @@
+import { delay } from 'roadhog-api-doc';
+import { appendFile } from 'fs';
+
 const list = [];
 
 for (let i = 0; i < 50; i++) {
@@ -24,7 +27,33 @@ const getFakeList = (req, res) => {
     res.json(resData);
 }
 
+const append = (req, res) => {
 
-export default {
-    'GET /api/asset/list': getFakeList
+};
+
+const remove = (req, res) => {
+    let { keys } = req.body;
+    keys = keys.split(',');
+    const indexList = [];
+    for (let {obj, index} in list) {
+        if (obj.id in keys) {
+            indexList.push(index);
+        }
+    }
+
+    for (let i in indexList) {
+        list.splice(i, 1);
+    }
+
+    res.json({res: true});
+};
+
+const proxy = {
+    'GET /api/asset/list': getFakeList,
+
+    'POST /api/asset/new': append,
+
+    'POST /api/asset/remove': remove
 }
+
+export default delay(proxy, 500);
