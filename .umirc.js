@@ -22,4 +22,7 @@ export default {
       },
     }],
   ],
+  devServer: {
+    port: 8080
+  }
 }

@@ -1,6 +1,6 @@
 const list = [];
 
-for (let i = 0; i < 15; i++) {
+for (let i = 0; i < 50; i++) {
     let obj = {
         id: i + 1,
         assetName: 'docker-test' + i,
@@ -13,8 +13,15 @@ for (let i = 0; i < 15; i++) {
 }
 
 const getFakeList = (req, res) => {
-    console.log(list);
-    res.json(list);
+    const { page, limit } = req.query;
+    const start = (page - 1) * limit;
+    const end = page * limit;
+    const resData = {
+        currentPage: page,
+        total: list.length,
+        data: list.slice(start, end)
+    }
+    res.json(resData);
 }
 
 

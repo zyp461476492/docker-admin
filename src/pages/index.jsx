@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'dva';
+import { connect } from 'dva';
 import {
     Tooltip, Card, Row,
     Col, Table, Tag,
@@ -7,8 +7,6 @@ import {
     Input, message
 } from 'antd';
 import style from './index.css';
-
-const defaultPageSize = 5;
 
 const columns = [
     {
@@ -133,7 +131,6 @@ class DockerAssetList extends React.Component {
     }
 
     handlerDelete = () => {
-        console.log(this.state.selectedRow);
         if (this.state.selectedRowKeys.length <= 0) {
             message.warning('请选择待删除的数据', 1);
         }
@@ -157,7 +154,6 @@ class DockerAssetList extends React.Component {
             message.info(JSON.stringify(values));
             values.status = '0';
             mockData.push(values)
-            console.log('Received values of form: ', values);
             form.resetFields();
             this.setState({ visible: false });
         });
@@ -165,10 +161,10 @@ class DockerAssetList extends React.Component {
 
     selectRow = (record) => {
         const selectedRowKeys = [...this.state.selectedRowKeys];
-        if (selectedRowKeys.indexOf(record.key) >= 0) {
-            selectedRowKeys.splice(selectedRowKeys.indexOf(record.key), 1);
+        if (selectedRowKeys.indexOf(record.id) >= 0) {
+            selectedRowKeys.splice(selectedRowKeys.indexOf(record.id), 1);
         } else {
-            selectedRowKeys.push(record.key);
+            selectedRowKeys.push(record.id);
         }
         this.setState({ selectedRowKeys });
     };
@@ -181,10 +177,17 @@ class DockerAssetList extends React.Component {
         this.formRef = formRef;
     };
 
+    handleTableChange = (pagination) => {
+        this.props.dispatch({
+            type: 'asset/fetch',
+            payload: {
+                page: pagination.current,
+                limit: pagination.pageSize
+            }
+        })
+    };
+
     render() {
-        const pagination = {
-            defaultPageSize: defaultPageSize
-        };
         const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
@@ -258,10 +261,13 @@ class DockerAssetList extends React.Component {
                                     }
                                 >
                                     <Table
+                                        loading={this.props.loading}
+                                        rowKey="id"
                                         rowSelection={rowSelection}
-                                        pagination={pagination}
+                                        pagination={this.props.pagination}
                                         columns={columns}
                                         dataSource={this.props.dataSource}
+                                        onChange={this.handleTableChange}
                                         onRow={(record) => (
                                             {
                                                 onClick: () => {
@@ -282,9 +288,7 @@ class DockerAssetList extends React.Component {
 }
 
 function mapStateToProps(state) {
-    console.log(state);
-    return { dataSource: state.asset.list };
-  }
+    return { dataSource: state.asset.list, pagination: state.asset.pagination, loading: state.loading.models.asset };
+}
 
-// export default DockerAssetList;
 export default connect(mapStateToProps)(DockerAssetList);
