@@ -116,7 +116,6 @@ const DockerAssetForm = Form.create({ name: 'xxx' })(
 class DockerAssetList extends React.Component {
 
     state = {
-        formUpadate: false,
         visible: false,
         selectedRowKeys: [],
         selectedRow: []

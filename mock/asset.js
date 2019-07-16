@@ -1,19 +1,5 @@
 import { delay } from 'roadhog-api-doc';
-import { appendFile } from 'fs';
-
-const list = [];
-
-for (let i = 0; i < 50; i++) {
-    let obj = {
-        id: i + 1,
-        assetName: 'docker-test' + i,
-        ip: '192.168.1.1' + i,
-        port: '220' + i,
-        apiVersion: '1.048',
-        status: i % 2 === 0 ? '1' : '0'
-    };
-    list.push(obj);
-}
+import list from '../mock/data/dockerInfo';
 
 const getFakeList = (req, res) => {
     const { page, limit } = req.query;
@@ -33,16 +19,11 @@ const append = (req, res) => {
 
 const remove = (req, res) => {
     let { keys } = req.body;
-    keys = keys.split(',');
-    const indexList = [];
-    for (let {obj, index} in list) {
-        if (obj.id in keys) {
-            indexList.push(index);
+    
+    for (let key in keys) {
+        if (list.indexOf(key) >= 0) {
+            list.splice(list.indexOf(key), 1);
         }
-    }
-
-    for (let i in indexList) {
-        list.splice(i, 1);
     }
 
     res.json({res: true});

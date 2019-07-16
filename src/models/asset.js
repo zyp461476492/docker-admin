@@ -9,9 +9,10 @@ export default {
         pagination: { defaultPageSize: defaultPageSize }
     },
     reducers: {
-        save(state, { payload: { res } }) {
+        save(state, { payload: { res, page, limit } }) {
             const pagination = state.pagination;
             pagination.total = res.total;
+            pagination.current = page;
             return { list: res.data, pagination: pagination };
         },
         del(state, { payload: { keys } }) {
@@ -21,7 +22,7 @@ export default {
     effects: {
         *fetch({ payload: { page, limit } }, { call, put }) {
             const res = yield call(assetService.queryList, { page, limit });
-            yield put({ type: 'save', payload: { res } });
+            yield put({ type: 'save', payload: { res, page, limit } });
         },
         *remove({ payload: { keys } }, { call, put }) {
             yield call(assetService.removeAsset, { keys });
