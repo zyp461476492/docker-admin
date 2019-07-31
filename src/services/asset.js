@@ -16,5 +16,15 @@ export async function addAsset(asset) {
 }
 
 export async function removeAsset(keys = {}) {
-  return request.post(`/api/asset/del`, { data: { keys: keys } });
+  return request('/api/asset/delete', {
+    method: 'POST',
+    requestType: 'form',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    data: {
+      info: keys,
+    },
+  });
 }

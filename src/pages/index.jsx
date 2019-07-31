@@ -83,12 +83,14 @@ const DockerAssetForm = Form.create({ name: 'xxx' })(
       const labelCol = { span: 4 };
 
       return (
-        <Modal 
-        visible={visible} 
-        title={title} okText="提交" 
-        onCancel={onCancel} 
-        onOk={onCreate}
-        confirmLoading={loading}>
+        <Modal
+          visible={visible}
+          title={title}
+          okText="提交"
+          onCancel={onCancel}
+          onOk={onCreate}
+          confirmLoading={loading}
+        >
           <Form labelAlign="right" labelCol={labelCol}>
             <Form.Item label="名称">
               {getFieldDecorator('assetName', {
@@ -141,7 +143,7 @@ class DockerAssetList extends React.Component {
       this.props.dispatch({
         type: 'asset/remove',
         payload: {
-          keys: this.state.selectedRowKeys,
+          keys: this.state.selectedRowKeys.join(','),
         },
       });
     }
@@ -151,6 +153,8 @@ class DockerAssetList extends React.Component {
     this.props.dispatch({
       type: 'asset/showDialog',
     });
+    const { form } = this.formRef.props;
+    form.resetFields();
   };
 
   handleCancel = () => {
@@ -171,7 +175,6 @@ class DockerAssetList extends React.Component {
           asset: values,
         },
       });
-      form.resetFields();
     });
   };
 
@@ -294,7 +297,6 @@ class DockerAssetList extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state);
   return {
     visible: state.asset.visible,
     dataSource: state.asset.list,

@@ -22,12 +22,6 @@ export default {
       pagination.current = page;
       return { list: res.Obj.list, pagination: pagination, visible: false };
     },
-    del(
-      state,
-      {
-        payload: { keys },
-      },
-    ) {},
     showTip(
       state,
       {
@@ -77,8 +71,17 @@ export default {
       },
       { call, put },
     ) {
-      yield call(assetService.removeAsset, { keys });
+      const res = yield call(assetService.removeAsset, keys);
+      const messageInfo = {};
+      if (res.Res) {
+        messageInfo.type = 'success';
+        messageInfo.info = '删除成功';
+      } else {
+        messageInfo.type = 'error';
+        messageInfo.info = `保存失败，原因：${res.Info}`;
+      }
       yield put({ type: 'fetch', payload: {} });
+      yield put({ type: 'showTip', payload: { messageInfo } });
     },
   },
   subscriptions: {
