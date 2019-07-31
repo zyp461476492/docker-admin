@@ -1,7 +1,21 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Tooltip, Card, Row, Col, Table, Tag, Button, Form, Modal, Input, message } from 'antd';
+import {
+  Tooltip,
+  Card,
+  Row,
+  Col,
+  Table,
+  Tag,
+  Button,
+  Form,
+  Modal,
+  Input,
+  message,
+  InputNumber,
+} from 'antd';
 import style from './index.css';
+import { showTip } from '../utils/common';
 
 const columns = [
   {
@@ -64,12 +78,17 @@ function StatusTip(props) {
 const DockerAssetForm = Form.create({ name: 'xxx' })(
   class extends React.Component {
     render() {
-      const { visible, title, onCancel, onCreate, form } = this.props;
+      const { visible, title, onCancel, onCreate, form, loading } = this.props;
       const { getFieldDecorator } = form;
       const labelCol = { span: 4 };
 
       return (
-        <Modal visible={visible} title={title} okText="Create" onCancel={onCancel} onOk={onCreate}>
+        <Modal 
+        visible={visible} 
+        title={title} okText="提交" 
+        onCancel={onCancel} 
+        onOk={onCreate}
+        confirmLoading={loading}>
           <Form labelAlign="right" labelCol={labelCol}>
             <Form.Item label="名称">
               {getFieldDecorator('assetName', {
@@ -84,7 +103,7 @@ const DockerAssetForm = Form.create({ name: 'xxx' })(
             <Form.Item label="端口">
               {getFieldDecorator('port', {
                 rules: [{ required: true, message: '请输入端口' }],
-              })(<Input className={style.form_input} />)}
+              })(<InputNumber className={style.form_input} min={0} max={65535} />)}
             </Form.Item>
             <Form.Item label="API">
               {getFieldDecorator('version', {
@@ -103,6 +122,10 @@ class DockerAssetList extends React.Component {
     visible: false,
     selectedRowKeys: [],
     selectedRow: [],
+  };
+
+  componentWillReceiveProps = () => {
+    showTip(message, this.props.messageInfo);
   };
 
   handlerAddForm = () => {};
@@ -126,13 +149,13 @@ class DockerAssetList extends React.Component {
 
   showModal = () => {
     this.props.dispatch({
-        type: 'asset/showDialog'
+      type: 'asset/showDialog',
     });
   };
 
   handleCancel = () => {
     this.props.dispatch({
-        type: 'asset/closeDialog'
+      type: 'asset/closeDialog',
     });
   };
 
@@ -142,10 +165,13 @@ class DockerAssetList extends React.Component {
       if (err) {
         return;
       }
-      message.info(JSON.stringify(values));
-      values.status = '0';
+      this.props.dispatch({
+        type: 'asset/add',
+        payload: {
+          asset: values,
+        },
+      });
       form.resetFields();
-      this.setState({ visible: false });
     });
   };
 
@@ -233,6 +259,7 @@ class DockerAssetList extends React.Component {
                         visible={this.props.visible}
                         onCancel={this.handleCancel}
                         onCreate={this.handleCreate}
+                        loading={this.props.loading}
                       />
                       <Button icon="edit">修改</Button>
                       <Button icon="delete" type="danger" onClick={this.handlerDelete}>
@@ -267,12 +294,13 @@ class DockerAssetList extends React.Component {
 }
 
 function mapStateToProps(state) {
-    console.log(state);
+  console.log(state);
   return {
     visible: state.asset.visible,
     dataSource: state.asset.list,
     pagination: state.asset.pagination,
     loading: state.loading.models.asset,
+    messageInfo: state.asset.messageInfo,
   };
 }
 

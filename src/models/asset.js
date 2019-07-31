@@ -6,6 +6,7 @@ export default {
   namespace: 'asset',
   state: {
     visible: false,
+    messageInfo: undefined,
     list: [],
     pagination: { defaultPageSize: defaultPageSize },
   },
@@ -27,6 +28,14 @@ export default {
         payload: { keys },
       },
     ) {},
+    showTip(
+      state,
+      {
+        payload: { messageInfo },
+      },
+    ) {
+      return { ...state, messageInfo: messageInfo };
+    },
     showDialog(state) {
       return { ...state, visible: true };
     },
@@ -50,10 +59,17 @@ export default {
       },
       { call, put },
     ) {
-      const res = yield call(assetService.addAsset, { asset });
+      const res = yield call(assetService.addAsset, asset);
+      const messageInfo = {};
       if (res.Res) {
+        messageInfo.type = 'success';
+        messageInfo.info = '保存成功';
       } else {
+        messageInfo.type = 'error';
+        messageInfo.info = `保存失败，原因：${res.Info}`;
       }
+      yield put({ type: 'fetch', payload: {} });
+      yield put({ type: 'showTip', payload: { messageInfo } });
     },
     *remove(
       {
