@@ -37,4 +37,4 @@ const proxy = {
     'POST /api/asset/remove': remove
 }
 
-export default delay(proxy, 500);
+// export default delay(proxy, 500);
