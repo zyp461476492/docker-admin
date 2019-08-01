@@ -4,8 +4,8 @@ import { LocaleProvider } from 'antd';
 
 function BasicLayout(props) {
   return (
-    <LocaleProvider locale={zhCN} className={style.container}>
-      {props.children}
+    <LocaleProvider locale={zhCN}>
+      <div className={style.container}>{props.children}</div>
     </LocaleProvider>
   );
 }

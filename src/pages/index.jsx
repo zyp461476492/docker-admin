@@ -14,6 +14,7 @@ import {
   message,
   InputNumber,
 } from 'antd';
+import router from 'umi/router';
 import style from './index.css';
 import { showTip } from '../utils/common';
 
@@ -130,7 +131,15 @@ class DockerAssetList extends React.Component {
     showTip(message, this.props.messageInfo);
   };
 
-  handlerAddForm = () => {};
+  handleTableChange = pagination => {
+    this.props.dispatch({
+      type: 'asset/fetch',
+      payload: {
+        page: pagination.current,
+        limit: pagination.pageSize,
+      },
+    });
+  };
 
   handlerModifyForm = data => {
     console.log(this.state.selectedRowKeys);
@@ -148,6 +157,15 @@ class DockerAssetList extends React.Component {
       });
     }
   };
+
+  handlerDetail = () => {
+    if (this.state.selectedRowKeys.length <= 0) {
+      message.warning('请选择一条数据', 1);
+    } else {
+      // 进入 detail 页
+      router.push(`/detail/${this.state.selectedRowKeys[0]}`);
+    }
+  }
 
   showModal = () => {
     this.props.dispatch({
@@ -194,16 +212,6 @@ class DockerAssetList extends React.Component {
 
   saveFormRef = formRef => {
     this.formRef = formRef;
-  };
-
-  handleTableChange = pagination => {
-    this.props.dispatch({
-      type: 'asset/fetch',
-      payload: {
-        page: pagination.current,
-        limit: pagination.pageSize,
-      },
-    });
   };
 
   render() {
@@ -268,7 +276,7 @@ class DockerAssetList extends React.Component {
                       <Button icon="delete" type="danger" onClick={this.handlerDelete}>
                         删除
                       </Button>
-                      <Button icon="info-circle">详情</Button>
+                      <Button icon="info-circle" onClick={this.handlerDetail}>详情</Button>
                     </div>
                   }
                 >
