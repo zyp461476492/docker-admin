@@ -1,10 +1,22 @@
-.container_body {
+.header {
   position: absolute;
-  top: 20%;
-  bottom: 5%;
+  top: 5%;
   left: 2%;
   right: 2%;
-  margin-top: 10px;
   display: block;
-  background-color: #FFFFFF;
 }
+
+.body {
+  position: absolute;
+  top: 5%;
+  left: 2%;
+  right: 2%;
+  bottom: 5%;
+  display: block;
+}
+
+.statistics {
+  margin-bottom: 10px;
+}
+
+

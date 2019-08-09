@@ -1,0 +1,34 @@
+.tip {
+  position: relative;
+  text-align: center;
+}
+
+.tip span {
+  display: inline-block;
+  margin-bottom: 4px;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.tip p {
+  margin: 0;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.error {
+  color: #ff7875;
+}
+
+.warn {
+  color: #ffc069;
+}
+
+.success {
+  color: #a0d911;
+}
+
+.normal {
+  color: rgba(0, 0, 0, 0.85);
+}
