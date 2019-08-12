@@ -55,15 +55,6 @@ export default {
       const res = yield call(assetService.queryList, { page, limit });
       yield put({ type: 'save', payload: { res, page } });
     },
-    *dockerInfo(
-      {
-        payload: { id },
-      },
-      { call, put },
-    ) {
-      const res = yield call(assetService.queryDockerInfo, { id });
-      yield put({ type: 'putDockerInfo', payload: { res } });
-    },
     *add(
       {
         payload: { asset },

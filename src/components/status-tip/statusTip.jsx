@@ -15,7 +15,6 @@ const StatusTip = (props) => {
       break;
     default:
   }
-  console.log(fontStyle);
   return (
     <div className={style.tip}>
       <Tooltip title={props.desc}>
