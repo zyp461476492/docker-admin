@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import styles from './detail.css';
-import { Descriptions, Skeleton, Alert, Card, Row, Col } from 'antd';
+import { PageHeader, Descriptions, Skeleton, Alert, Card, Row, Col } from 'antd';
 import StatusTip from '../../components/status-tip/statusTip';
 
 class DockerBasicPanel extends React.Component {
@@ -12,6 +12,7 @@ class DockerBasicPanel extends React.Component {
       context = (
         <div>
           <div className={styles.header}>
+          <PageHeader onBack={() => null} title="Docker" subTitle="基本信息" />
             <div className={styles.statistics}>
               <Row type="flex" gutter={32}>
                 <Col span={12}>
@@ -189,7 +190,7 @@ class DockerBasicPanel extends React.Component {
               <Row type="flex" className={styles.block}>
                 <Col span={24}>
                   <Card bordered={false}>
-                    <Descriptions title="其他参数" bordered={true} column={2} >
+                    <Descriptions title="其他参数" bordered={true} column={2}>
                       <Descriptions.Item label="BridgeNfIp6tables">
                         {this.props.dockerInfo.Obj.BridgeNfIp6tables.toString()}
                       </Descriptions.Item>
