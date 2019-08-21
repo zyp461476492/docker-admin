@@ -246,16 +246,18 @@ class DockerPanel extends React.Component {
   render() {
     let context = <Alert message="信息查询失败" type="error" />;
     const operations = <Button>返回</Button>;
+    const IconFont = Icon.createFromIconfontCN({
+      scriptUrl: '//at.alicdn.com/t/font_1363529_nopo1vjcec.js',
+    });
     if (this.props.dockerInfo && this.props.dockerInfo.Res) {
       context = (
         <div>
           <div className={styles.header}>
-            {/* <PageHeader onBack={() => null} title="Docker" subTitle="基本信息" /> */}
             <Tabs defaultActiveKey="1" tabBarExtraContent={operations}>
               <TabPane
                 tab={
                   <span>
-                    <Icon type="file-text" />
+                    <IconFont type="icon-Docker" />
                     基本信息
                   </span>
                 }
@@ -265,7 +267,7 @@ class DockerPanel extends React.Component {
               </TabPane>
               <TabPane tab={
                   <span>
-                    <Icon type="cloud" />
+                    <IconFont type="icon-acrrongqijingxiangfuwu" />
                     镜像
                   </span>
                 } key="2">
@@ -273,7 +275,7 @@ class DockerPanel extends React.Component {
               </TabPane>
               <TabPane tab={
                   <span>
-                    <Icon type="container" />
+                    <IconFont type="icon-rongqifuwuContainerServi" />
                     容器
                   </span>
                 } key="3">
