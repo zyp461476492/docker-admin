@@ -242,6 +242,44 @@ class BasicPanel extends React.Component {
   }
 }
 
+const imageColumn = [
+  {
+    title: 'REPOSITORY',
+    dataIndex: 'repo',
+    key: 'repo',
+  },
+  {
+    title: 'TAG',
+    dataIndex: 'tag',
+    key: 'tag',
+  },
+  {
+    title: 'IMAGE ID ',
+    dataIndex: 'id',
+    key: 'id',
+  },
+  {
+    title: 'CREATED',
+    dataIndex: 'created',
+    key: 'created',
+  },
+  {
+    title: 'SIZE',
+    dataIndex: 'size',
+    key: 'size',
+  },
+];
+
+class ImagePanel extends React.Component {
+
+}
+
+class ContainerPanel extends React.Component {
+
+}
+
+
+
 class DockerPanel extends React.Component {
   render() {
     let context = <Alert message="信息查询失败" type="error" />;

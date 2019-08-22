@@ -12,7 +12,15 @@ export default {
         payload: { res },
       },
     ) {
-      return { dockerInfo: res };
+      return { ...state, dockerInfo: res };
+    },
+    putImageInfo(
+      state,
+      {
+        payload: { res },
+      },
+    ) {
+      return { ...state, imageList: res };
     },
   },
   effects: {
@@ -24,6 +32,15 @@ export default {
     ) {
       const res = yield call(basicService.queryDockerInfo, { id });
       yield put({ type: 'putDockerInfo', payload: { res } });
+    },
+    *imageList(
+      {
+        payload: { id },
+      },
+      { call, put },
+    ) {
+      const res = yield call(basicService.queryImageList, { id });
+      yield put({ type: 'putImageInfo', payload: { res } });
     },
   },
   subscriptions: {
