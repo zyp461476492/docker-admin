@@ -4,6 +4,8 @@ export default {
   namespace: 'dockerBasic',
   state: {
     dockerInfo: null,
+    imageInfo: null,
+    containerInfo: null
   },
   reducers: {
     putDockerInfo(
@@ -20,7 +22,15 @@ export default {
         payload: { res },
       },
     ) {
-      return { ...state, imageList: res };
+      return { ...state, imageInfo: res };
+    },
+    putContainerInfo(
+      state,
+      {
+        payload: { res },
+      },
+    ) {
+      return { ...state, containerInfo: res };
     },
   },
   effects: {
@@ -42,6 +52,15 @@ export default {
       const res = yield call(basicService.queryImageList, { id });
       yield put({ type: 'putImageInfo', payload: { res } });
     },
+    *containerList(
+      {
+        payload: { id },
+      },
+      { call, put },
+    ) {
+      const res = yield call(basicService.queryImageList, { id });
+      yield put({ type: 'putContainerInfo', payload: { res } });
+    },
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -49,6 +68,8 @@ export default {
         if (location.pathname.startsWith('/detail')) {
           let id = location.pathname.split('/')[2];
           dispatch({ type: 'dockerInfo', payload: { id } });
+          dispatch({ type: 'imageList', payload: { id } });
+          dispatch({ type: 'containerList', payload: { id } });
         }
       });
     },
