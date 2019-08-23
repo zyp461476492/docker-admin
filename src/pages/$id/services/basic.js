@@ -1,5 +1,4 @@
 import request from '@/utils/request';
-import { func } from 'prop-types';
 
 export async function queryDockerInfo({ id }) {
   return request(`/api/asset/info?index=${id}`);

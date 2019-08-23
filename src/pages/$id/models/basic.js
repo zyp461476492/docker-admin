@@ -65,12 +65,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(location => {
-        if (location.pathname.startsWith('/detail')) {
-          let id = location.pathname.split('/')[2];
-          dispatch({ type: 'dockerInfo', payload: { id } });
-          dispatch({ type: 'imageList', payload: { id } });
-          dispatch({ type: 'containerList', payload: { id } });
-        }
+       
       });
     },
   },

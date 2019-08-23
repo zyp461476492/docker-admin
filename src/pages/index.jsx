@@ -163,7 +163,7 @@ class DockerAssetList extends React.Component {
       message.warning('请选择一条数据', 1);
     } else {
       // 进入 detail 页
-      router.push(`/detail/${this.state.selectedRowKeys[0]}`);
+      router.push(`/${this.state.selectedRowKeys[0]}`);
     }
   }
 

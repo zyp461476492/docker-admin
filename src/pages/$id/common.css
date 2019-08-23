@@ -1,0 +1,29 @@
+.header {
+  position: absolute;
+  top: 5%;
+  left: 2%;
+  right: 2%;
+  display: block;
+}
+
+.block {
+  margin-top: 10px;
+}
+
+.body {
+  position: absolute;
+  top: 5%;
+  left: 2%;
+  right: 2%;
+  bottom: 5%;
+  display: block;
+}
+
+.statistics {
+  margin-bottom: 10px;
+}
+
+.btn_block Button {
+  margin-left: 5px;
+}
+

@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'dva';
-import styles from './detail.css';
-import { Table, Icon, Button, Tabs, Descriptions, Skeleton, Alert, Card, Row, Col } from 'antd';
+import styles from './common.css';
+import { Icon, Button, Tabs, Descriptions, Skeleton, Alert, Card, Row, Col } from 'antd';
 import StatusTip from '../../components/status-tip/statusTip';
+import ImagePanel from './image';
 
 const { TabPane } = Tabs;
 
@@ -242,118 +243,20 @@ class BasicPanel extends React.Component {
   }
 }
 
-const imageColumn = [
-  {
-    title: 'REPOSITORY',
-    dataIndex: 'repo',
-    key: 'repo',
-  },
-  {
-    title: 'TAG',
-    dataIndex: 'tag',
-    key: 'tag',
-  },
-  {
-    title: 'IMAGE ID ',
-    dataIndex: 'id',
-    key: 'id',
-  },
-  {
-    title: 'CREATED',
-    dataIndex: 'created',
-    key: 'created',
-  },
-  {
-    title: 'SIZE',
-    dataIndex: 'size',
-    key: 'size',
-  },
-  {
-    title: 'OPERATE',
-    dataIndex: 'operate',
-    key: 'operate',
-    render: (text, record, index) => {
-      return (
-        <div>
-          <Button icon="delete" type="danger">
-            删除
-          </Button>
-          <Button icon="delete">历史</Button>
-        </div>
-      );
-    },
-  },
-];
-
-class ImagePanel extends React.Component {
-  tagsFormatter = tags => {
-    let formatTags = [];
-    for (let tag of tags) {
-      formatTags.push(tag.split(':')[1]);
-    }
-    return formatTags.join(',');
+class DockerBasicTab extends React.Component {
+  componentDidMount = () => {
+    const id = this.props.match.params.id;
+    this.props.dispatch({
+      type: 'dockerBasic/dockerInfo',
+      payload: { id },
+    });
+    this.props.dispatch({
+      type: 'dockerBasic/imageList',
+      payload: { id },
+    });
   };
 
-  idFormatter = id => {
-    return id.split(':')[1].slice(0, 12);
-  };
-
-  timeFormatter = timestamp => {
-    return new Date(timestamp).toLocaleString();
-  };
-
-  sizeFormatter = size => {
-    return Math.round(size / (1000 * 1000)) + 'MB';
-  };
-
-  parseList = list => {
-    let data = [];
-    for (let info of list) {
-      let repo = info.RepoTags[0].split(':')[0];
-      data.push({
-        repo: repo,
-        tag: this.tagsFormatter(info.RepoTags),
-        id: this.idFormatter(info.Id),
-        created: this.timeFormatter(info.Created),
-        size: this.sizeFormatter(info.Size),
-      });
-    }
-    return data;
-  };
-
-  render() {
-    let dataSource = [];
-    if (this.props.imageInfo.Res) {
-      dataSource = this.parseList(this.props.imageInfo.Obj);
-    }
-
-    return (
-      <div>
-        <Card
-          extra={
-            <div className={styles.btn_block}>
-              <Button icon="plus">拉取</Button>
-              <Button icon="edit">搜索</Button>
-            </div>
-          }
-        >
-          <Table
-            rowKey="id"
-            loading={this.props.loading}
-            columns={imageColumn}
-            dataSource={dataSource}
-          />
-        </Card>
-      </div>
-    );
-  }
-}
-
-class ContainerPanel extends React.Component {}
-
-class DockerPanel extends React.Component {
   tabChange = key => {
-    console.log(key);
     switch (key) {
     }
   };
@@ -362,12 +265,16 @@ class DockerPanel extends React.Component {
     const operations = <Button>返回</Button>;
     const IconFont = Icon.createFromIconfontCN({
       scriptUrl: '//at.alicdn.com/t/font_1363529_nopo1vjcec.js',
-    });
+    }); 
     if (this.props.dockerInfo && this.props.dockerInfo.Res) {
       context = (
         <div>
           <div className={styles.header}>
-            <Tabs defaultActiveKey="1" tabBarExtraContent={operations} onChange={this.tabChange}>
+            <Tabs
+              defaultActiveKey="basic"
+              tabBarExtraContent={operations}
+              onChange={this.tabChange}
+            >
               <TabPane
                 tab={
                   <span>
@@ -375,7 +282,7 @@ class DockerPanel extends React.Component {
                     基本信息
                   </span>
                 }
-                key="1"
+                key="basic"
               >
                 <BasicPanel dockerInfo={this.props.dockerInfo} />
               </TabPane>
@@ -386,10 +293,11 @@ class DockerPanel extends React.Component {
                     镜像
                   </span>
                 }
-                key="2"
+                key="image"
               >
-                <ImagePanel imageInfo={this.props.imageInfo} loading={this.props.loading} />
+                 <ImagePanel id={this.props.match.params.id} />
               </TabPane>
+             
               <TabPane
                 tab={
                   <span>
@@ -397,10 +305,8 @@ class DockerPanel extends React.Component {
                     容器
                   </span>
                 }
-                key="3"
-              >
-                Content of Tab Pane 3
-              </TabPane>
+                key="container"
+              />
             </Tabs>
           </div>
         </div>
@@ -413,10 +319,8 @@ class DockerPanel extends React.Component {
 function mapStateToProps(state) {
   return {
     dockerInfo: state.dockerBasic.dockerInfo,
-    imageInfo: state.dockerBasic.imageInfo,
-    containerInfo: state.dockerBasic.containerInfo,
     loading: state.loading.models.dockerBasic,
   };
 }
 
-export default connect(mapStateToProps)(DockerPanel);
+export default connect(mapStateToProps)(DockerBasicTab);
