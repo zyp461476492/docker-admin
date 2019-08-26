@@ -69,7 +69,7 @@ class ImagePanel extends React.Component {
   };
 
   timeFormatter = timestamp => {
-    return new Date(timestamp).toLocaleString();
+    return new Date(timestamp * 1000).toLocaleString();
   };
 
   sizeFormatter = size => {

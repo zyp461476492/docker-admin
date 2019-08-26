@@ -58,7 +58,7 @@ export default {
       },
       { call, put },
     ) {
-      const res = yield call(basicService.queryImageList, { id });
+      const res = yield call(basicService.queryContainerList, { id });
       yield put({ type: 'putContainerInfo', payload: { res } });
     },
   },
