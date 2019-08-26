@@ -1,60 +1,9 @@
 import React from 'react';
 import { connect } from 'dva';
 import styles from './common.css';
-import { Icon, Button, Tabs, Descriptions, Skeleton, Alert, Card, Row, Col } from 'antd';
+import { Result, Skeleton, Descriptions, Card, Row, Col } from 'antd';
 import StatusTip from '../../components/status-tip/statusTip';
-
-const { TabPane } = Tabs;
-
-class Test extends React.Component {
-
-  render() {
-    const operations = <Button>返回</Button>;
-    const IconFont = Icon.createFromIconfontCN({
-      scriptUrl: '//at.alicdn.com/t/font_1363529_nopo1vjcec.js',
-    });
-    return (
-      <div>
-        <div className={styles.header}>
-          <Tabs defaultActiveKey="basic" tabBarExtraContent={operations} >
-            <TabPane
-              tab={
-                <span>
-                  <IconFont type="icon-Docker" />
-                  基本信息
-                </span>
-              }
-              key="basic"
-            >
-              {this.props.test}
-            </TabPane>
-            <TabPane
-              tab={
-                <span>
-                  <IconFont type="icon-acrrongqijingxiangfuwu" />
-                  镜像
-                </span>
-              }
-              key="image"
-            >
-             
-            </TabPane>
-
-            <TabPane
-              tab={
-                <span>
-                  <IconFont type="icon-rongqifuwuContainerServi" />
-                  容器
-                </span>
-              }
-              key="container"
-            />
-          </Tabs>
-        </div>
-      </div>
-    );
-  }
-}
+import Basic from '../../components/basicTabPanel/tabPanel';
 
 class BasicPanel extends React.Component {
   render() {
@@ -299,75 +248,20 @@ class DockerBasicTab extends React.Component {
       type: 'dockerBasic/dockerInfo',
       payload: { id },
     });
-    this.props.dispatch({
-      type: 'dockerBasic/imageList',
-      payload: { id },
-    });
   };
 
-  tabChange = key => {
-    switch (key) {
-    }
-  };
   render() {
-    let context = <Alert message="信息查询失败" type="error" />;
-    const operations = <Button>返回</Button>;
-    const IconFont = Icon.createFromIconfontCN({
-      scriptUrl: '//at.alicdn.com/t/font_1363529_nopo1vjcec.js',
-    });
-    // if (this.props.dockerInfo && this.props.dockerInfo.Res) {
-    //   context = (
-    //     <div>
-    //       <div className={styles.header}>
-    //         <Tabs
-    //           defaultActiveKey="basic"
-    //           tabBarExtraContent={operations}
-    //           onChange={this.tabChange}
-    //         >
-    //           <TabPane
-    //             tab={
-    //               <span>
-    //                 <IconFont type="icon-Docker" />
-    //                 基本信息
-    //               </span>
-    //             }
-    //             key="basic"
-    //           >
-    //             <BasicPanel dockerInfo={this.props.dockerInfo} />
-    //           </TabPane>
-    //           <TabPane
-    //             tab={
-    //               <span>
-    //                 <IconFont type="icon-acrrongqijingxiangfuwu" />
-    //                 镜像
-    //               </span>
-    //             }
-    //             key="image"
-    //           >
-    //             <ImagePanel id={this.props.match.params.id} />
-    //           </TabPane>
-
-    //           <TabPane
-    //             tab={
-    //               <span>
-    //                 <IconFont type="icon-rongqifuwuContainerServi" />
-    //                 容器
-    //               </span>
-    //             }
-    //             key="container"
-    //           />
-    //         </Tabs>
-    //       </div>
-    //     </div>
-    //   );
-    // }
-    let tt = <div>加载中</div>;
+    let context = <Skeleton active />;
     if (this.props.dockerInfo && this.props.dockerInfo.Res) {
-      tt = <BasicPanel dockerInfo={this.props.dockerInfo} />;
+      context = <BasicPanel dockerInfo={this.props.dockerInfo} />;
+    } else if (this.props.dockerInfo && !this.props.dockerInfo.Res) {
+      context = (
+        <Result status="404" title="404" subTitle="Sorry, the page you visited does not exist." />
+      );
     }
-    
+
     return (
-      <Test  test={tt}/>
+      <Basic title="Docker" subTitle="基本信息" content={context} loading={this.props.loading} />
     );
   }
 }

@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'dva';
 import styles from './common.css';
-import { Table, Button, Card } from 'antd';
+import { Result, Skeleton, Table, Button, Card } from 'antd';
+import Basic from '../../components/basicTabPanel/tabPanel';
 
 const imageColumn = [
   {
@@ -48,7 +49,7 @@ const imageColumn = [
 
 class ImagePanel extends React.Component {
   test = () => {
-    const id = this.props.id;
+    const id = this.props.assetId;
     this.props.dispatch({
       type: 'dockerBasic/imageList',
       payload: { id },
@@ -101,7 +102,9 @@ class ImagePanel extends React.Component {
         <Card
           extra={
             <div className={styles.btn_block}>
-              <Button icon="plus" onClick={this.test}>拉取</Button>
+              <Button icon="plus" onClick={this.test}>
+                拉取
+              </Button>
               <Button icon="edit">搜索</Button>
             </div>
           }
@@ -118,6 +121,40 @@ class ImagePanel extends React.Component {
   }
 }
 
+class DockerImagePage extends React.Component {
+  componentDidMount = () => {
+    const id = this.props.match.params.id;
+    this.props.dispatch({
+      type: 'dockerBasic/imageList',
+      payload: { id },
+    });
+  };
+
+  render() {
+    let context = <Skeleton active />;
+    if (this.props.imageInfo && this.props.imageInfo.Res) {
+      context = (
+        <ImagePanel
+          assetId={this.props.match.params.id}
+          imageInfo={this.props.imageInfo}
+          loading={this.props.loading}
+          dispatch={this.props.dispatch}
+        />
+      );
+    } else if (this.props.imageInfo && !this.props.imageInfo.Res) {
+      context = (
+        <Result
+          status="404"
+          title="404"
+          subTitle="Sorry, the page you visited does not exist."
+        />
+      );
+    }
+
+    return <Basic title="Docker" subTitle="镜像" content={context} loading={this.props.loading} />;
+  }
+}
+
 function mapStateToProps(state) {
   return {
     imageInfo: state.dockerBasic.imageInfo,
@@ -125,4 +162,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(ImagePanel);
+export default connect(mapStateToProps)(DockerImagePage);
