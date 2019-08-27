@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import styles from './common.css';
 import { Result, Skeleton, Table, Button, Card } from 'antd';
 import Basic from '../../components/basicTabPanel/tabPanel';
+import ImagePanel from '../../components/panel/imagePanel';
 
 const imageColumn = [
   {
@@ -47,109 +48,106 @@ const imageColumn = [
   },
 ];
 
-class ImagePanel extends React.Component {
-  test = () => {
-    const id = this.props.assetId;
-    this.props.dispatch({
-      type: 'dockerBasic/imageList',
-      payload: { id },
-    });
-  };
+// class ImagePanel extends React.Component {
+//   test = () => {
+//     const id = this.props.assetId;
+//     this.props.dispatch({
+//       type: 'dockerBasic/imageList',
+//       payload: { id },
+//     });
+//   };
 
-  tagsFormatter = tags => {
-    let formatTags = [];
-    for (let tag of tags) {
-      formatTags.push(tag.split(':')[1]);
-    }
-    return formatTags.join(',');
-  };
+//   tagsFormatter = tags => {
+//     let formatTags = [];
+//     for (let tag of tags) {
+//       formatTags.push(tag.split(':')[1]);
+//     }
+//     return formatTags.join(',');
+//   };
 
-  idFormatter = id => {
-    return id.split(':')[1].slice(0, 12);
-  };
+//   idFormatter = id => {
+//     return id.split(':')[1].slice(0, 12);
+//   };
 
-  timeFormatter = timestamp => {
-    return new Date(timestamp * 1000).toLocaleString();
-  };
+//   timeFormatter = timestamp => {
+//     return new Date(timestamp * 1000).toLocaleString();
+//   };
 
-  sizeFormatter = size => {
-    return Math.round(size / (1000 * 1000)) + 'MB';
-  };
+//   sizeFormatter = size => {
+//     return Math.round(size / (1000 * 1000)) + 'MB';
+//   };
 
-  parseList = list => {
-    let data = [];
-    for (let info of list) {
-      let repo = info.RepoTags[0].split(':')[0];
-      data.push({
-        repo: repo,
-        tag: this.tagsFormatter(info.RepoTags),
-        id: this.idFormatter(info.Id),
-        created: this.timeFormatter(info.Created),
-        size: this.sizeFormatter(info.Size),
-      });
-    }
-    return data;
-  };
+//   parseList = list => {
+//     let data = [];
+//     for (let info of list) {
+//       let repo = info.RepoTags[0].split(':')[0];
+//       data.push({
+//         repo: repo,
+//         tag: this.tagsFormatter(info.RepoTags),
+//         id: this.idFormatter(info.Id),
+//         created: this.timeFormatter(info.Created),
+//         size: this.sizeFormatter(info.Size),
+//       });
+//     }
+//     return data;
+//   };
 
-  render() {
-    let dataSource = [];
-    if (this.props.imageInfo && this.props.imageInfo.Res) {
-      dataSource = this.parseList(this.props.imageInfo.Obj);
-    }
+//   render() {
+//     let dataSource = [];
+//     if (this.props.imageInfo && this.props.imageInfo.Res) {
+//       dataSource = this.parseList(this.props.imageInfo.Obj);
+//     }
 
-    return (
-      <div>
-        <Card
-          extra={
-            <div className={styles.btn_block}>
-              <Button icon="plus" onClick={this.test}>
-                拉取
-              </Button>
-              <Button icon="edit">搜索</Button>
-            </div>
-          }
-        >
-          <Table
-            rowKey="id"
-            loading={this.props.loading}
-            columns={imageColumn}
-            dataSource={dataSource}
-          />
-        </Card>
-      </div>
-    );
-  }
-}
+//     return (
+//       <div>
+//         <Card
+//           extra={
+//             <div className={styles.btn_block}>
+//               <Button icon="plus" onClick={this.test}>
+//                 拉取
+//               </Button>
+//               <Button icon="edit">搜索</Button>
+//             </div>
+//           }
+//         >
+//           <Table
+//             rowKey="id"
+//             loading={this.props.loading}
+//             columns={imageColumn}
+//             dataSource={dataSource}
+//           />
+//         </Card>
+//       </div>
+//     );
+//   }
+// }
 
 class DockerImagePage extends React.Component {
-  componentDidMount = () => {
-    const id = this.props.match.params.id;
-    this.props.dispatch({
-      type: 'dockerBasic/imageList',
-      payload: { id },
-    });
-  };
+
 
   render() {
     let context = <Skeleton active />;
-    if (this.props.imageInfo && this.props.imageInfo.Res) {
-      context = (
-        <ImagePanel
-          assetId={this.props.match.params.id}
-          imageInfo={this.props.imageInfo}
-          loading={this.props.loading}
-          dispatch={this.props.dispatch}
-        />
-      );
-    } else if (this.props.imageInfo && !this.props.imageInfo.Res) {
-      context = (
-        <Result
-          status="404"
-          title="404"
-          subTitle="Sorry, the page you visited does not exist."
-        />
-      );
-    }
+    // if (this.props.imageInfo && this.props.imageInfo.Res) {
+    //   context = (
+    //     <ImagePanel
+    //       assetId={this.props.match.params.id}
+    //     />
+    //   );
+    // } else if (this.props.imageInfo && !this.props.imageInfo.Res) {
+    //   context = (
+    //     <Result
+    //       status="404"
+    //       title="404"
+    //       subTitle="Sorry, the page you visited does not exist."
+    //     />
+    //   );
+    // }
+
+    context = (
+      <ImagePanel
+        assetId={this.props.match.params.id}
+      />
+    );
 
     return <Basic title="Docker" subTitle="镜像" content={context} loading={this.props.loading} />;
   }
