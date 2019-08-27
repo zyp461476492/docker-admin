@@ -50,7 +50,7 @@ const containerColumn = [
 
 class ContainerPanel extends React.Component {
   componentDidMount = () => {
-    const id = this.props.match.params.id;
+    const id = this.props.assetId;
     this.props.dispatch({
       type: 'dockerBasic/containerList',
       payload: { id },
