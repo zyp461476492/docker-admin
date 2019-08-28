@@ -163,9 +163,9 @@ class DockerAssetList extends React.Component {
       message.warning('请选择一条数据', 1);
     } else {
       // 进入 detail 页
-      router.push(`/${this.state.selectedRowKeys[0]}`);
+      router.push(`/detail/${this.state.selectedRowKeys[0]}`);
     }
-  }
+  };
 
   showModal = () => {
     this.props.dispatch({
@@ -276,7 +276,9 @@ class DockerAssetList extends React.Component {
                       <Button icon="delete" type="danger" onClick={this.handlerDelete}>
                         删除
                       </Button>
-                      <Button icon="info-circle" onClick={this.handlerDetail}>详情</Button>
+                      <Button icon="info-circle" onClick={this.handlerDetail}>
+                        详情
+                      </Button>
                     </div>
                   }
                 >

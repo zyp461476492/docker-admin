@@ -7,7 +7,6 @@ import BasicPanel from '../../components/panel/basicPanel';
 import ImagePanel from '../../components/panel/imagePanel';
 import ContainerPanel from '../../components/panel/containerPanel';
 
-
 const { TabPane } = Tabs;
 
 const IconFont = Icon.createFromIconfontCN({
@@ -24,7 +23,7 @@ class DockerBasicTab extends React.Component {
   };
 
   render() {
-    const assetId = this.props.match.params.id;;
+    const assetId = this.props.match.params.id;
     return (
       <Row className={styles.container}>
         <Col span={24}>
