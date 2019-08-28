@@ -5,7 +5,8 @@ export default {
   state: {
     dockerInfo: null,
     imageInfo: null,
-    containerInfo: null
+    containerInfo: null,
+    res: null
   },
   reducers: {
     putDockerInfo(
@@ -31,6 +32,14 @@ export default {
       },
     ) {
       return { ...state, containerInfo: res };
+    },
+    putAsynRes(
+      state,
+      {
+        payload: { res },
+      },
+    ) {
+      return { ...state, res: res };
     },
   },
   effects: {
@@ -60,6 +69,42 @@ export default {
     ) {
       const res = yield call(basicService.queryContainerList, { id });
       yield put({ type: 'putContainerInfo', payload: { res } });
+    },
+    *containerStart(
+      {
+        payload: { assetId, containerId },
+        callback
+      },
+      { call, put },
+    ) {
+      const res = yield call(basicService.containerStart, { assetId, containerId });
+      if (callback && typeof callback === 'function') {
+        callback(res.Res);
+      }
+    },
+    *containerPause(
+      {
+        payload: { assetId, containerId },
+        callback
+      },
+      { call, put },
+    ) {
+      const res = yield call(basicService.containerPause, { assetId, containerId });
+      if (callback && typeof callback === 'function') {
+        callback(res.Res);
+      }
+    },
+    *containerStop(
+      {
+        payload: { assetId, containerId },
+        callback
+      },
+      { call, put },
+    ) {
+      const res = yield call(basicService.containerStop, { assetId, containerId });
+      if (callback && typeof callback === 'function') {
+        callback(res.Res);
+      }
     },
   },
   subscriptions: {

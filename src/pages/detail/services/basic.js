@@ -11,3 +11,15 @@ export async function queryImageList({ id }) {
 export async function queryContainerList({ id }) {
   return request(`/api/container/list?index=${id}`);
 }
+
+export async function containerStart({ assetId, containerId }) {
+  return request(`/api/container/start?assetId=${assetId}&containerId=${containerId}`);
+}
+
+export async function containerPause({ assetId, containerId }) {
+  return request(`/api/container/pause?assetId=${assetId}&containerId=${containerId}`);
+}
+
+export async function containerStop({ assetId, containerId }) {
+  return request(`/api/container/stop?assetId=${assetId}&containerId=${containerId}`);
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import styles from './panel.css';
-import { Table, Button, Card } from 'antd';
+import { message, Table, Button, Card } from 'antd';
 
 const ButtonGroup = Button.Group;
 
@@ -49,12 +49,27 @@ const containerColumn = [
 ];
 
 class ContainerPanel extends React.Component {
+  state = {
+    selectedRowKeys: [],
+    selectedRow: [],
+  };
+
   componentDidMount = () => {
-    const id = this.props.assetId;
-    this.props.dispatch({
-      type: 'dockerBasic/containerList',
-      payload: { id },
-    });
+    this.queryContainerList();
+  };
+
+  selectRow = record => {
+    const selectedRowKeys = [...this.state.selectedRowKeys];
+    if (selectedRowKeys.indexOf(record.id) >= 0) {
+      selectedRowKeys.splice(selectedRowKeys.indexOf(record.id), 1);
+    } else {
+      selectedRowKeys.push(record.id);
+    }
+    this.setState({ selectedRowKeys });
+  };
+
+  onSelectedRowKeysChange = selectedRowKeys => {
+    this.setState({ selectedRowKeys });
   };
 
   portFormatter = portList => {
@@ -101,7 +116,65 @@ class ContainerPanel extends React.Component {
     return data;
   };
 
+  queryContainerList = () => {
+    const id = this.props.assetId;
+    this.props.dispatch({
+      type: 'dockerBasic/containerList',
+      payload: { id },
+    });
+  };
+
+  dispatchContainerCommand = (assetId, containerId, type) => {
+    let dispatchType = 'dockerBasic/containerStart';
+    let tip = '启动';
+    if (type === 'pause') {
+      dispatchType = 'dockerBasic/containerPause';
+      tip = '暂停';
+    } else if (type === 'stop') {
+      dispatchType = 'dockerBasic/containerStop';
+      tip = '停止';
+    }
+
+    this.props.dispatch({
+      type: dispatchType,
+      payload: {
+        assetId,
+        containerId,
+      },
+      callback: res => {
+        message.destroy();
+        if (res) {
+          message.success(`${tip}成功`, 1);
+        } else {
+          message.error(`${tip}失败`, 1);
+        }
+        this.queryContainerList();
+      },
+    });
+  };
+
+  execCommand = type => {
+    console.log('click');
+    const length = this.state.selectedRowKeys.length;
+    if (length <= 0) {
+      message.warning('请选择一条数据', 1);
+    } else if (length === 1) {
+      message.loading(`${type}...`, 0);
+      const assetId = this.props.assetId;
+      const containerId = this.state.selectedRowKeys[0];
+      this.dispatchContainerCommand(assetId, containerId, type);
+    } else {
+      message.warning('暂不支持批量操作', 1);
+    }
+  };
+
   render() {
+    const { selectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectedRowKeysChange,
+    };
+
     let dataSource = [];
     if (this.props.containerInfo && this.props.containerInfo.Res) {
       dataSource = this.parseList(this.props.containerInfo.Obj);
@@ -113,9 +186,9 @@ class ContainerPanel extends React.Component {
           extra={
             <div className={styles.btn_block}>
               <ButtonGroup>
-                <Button>L</Button>
-                <Button>M</Button>
-                <Button>R</Button>
+                <Button onClick={this.execCommand.bind(this, 'start')} icon="caret-right"></Button>
+                <Button onClick={this.execCommand.bind(this, 'pause')} icon="pause"></Button>
+                <Button onClick={this.execCommand.bind(this, 'stop')} icon="stop"></Button>
               </ButtonGroup>
             </div>
           }
@@ -125,6 +198,13 @@ class ContainerPanel extends React.Component {
             loading={this.props.loading}
             columns={containerColumn}
             dataSource={dataSource}
+            rowSelection={rowSelection}
+            onChange={this.handleTableChange}
+            onRow={record => ({
+              onClick: () => {
+                this.selectRow(record);
+              },
+            })}
           />
         </Card>
       </div>
@@ -135,6 +215,7 @@ class ContainerPanel extends React.Component {
 function mapStateToProps(state) {
   return {
     containerInfo: state.dockerBasic.containerInfo,
+    res: state.dockerBasic.containerInfo,
     loading: state.loading.models.dockerBasic,
   };
 }
