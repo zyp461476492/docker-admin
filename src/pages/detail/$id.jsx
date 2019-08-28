@@ -14,14 +14,6 @@ const IconFont = Icon.createFromIconfontCN({
 });
 
 class DockerBasicTab extends React.Component {
-  componentDidMount = () => {
-    const id = this.props.match.params.id;
-    this.props.dispatch({
-      type: 'dockerBasic/dockerInfo',
-      payload: { id },
-    });
-  };
-
   render() {
     const assetId = this.props.match.params.id;
     return (
@@ -70,7 +62,6 @@ class DockerBasicTab extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    dockerInfo: state.dockerBasic.dockerInfo,
     loading: state.loading.models.dockerBasic,
   };
 }
