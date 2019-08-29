@@ -6,7 +6,8 @@ export default {
     dockerInfo: null,
     imageInfo: null,
     containerInfo: null,
-    res: null
+    imageSearchInfo: null,
+    res: null,
   },
   reducers: {
     putDockerInfo(
@@ -33,13 +34,13 @@ export default {
     ) {
       return { ...state, containerInfo: res };
     },
-    putAsynRes(
+    putImageSearchInfo(
       state,
       {
         payload: { res },
       },
     ) {
-      return { ...state, res: res };
+      return { ...state, imageSearchInfo: res };
     },
   },
   effects: {
@@ -61,6 +62,15 @@ export default {
       const res = yield call(basicService.queryImageList, { id });
       yield put({ type: 'putImageInfo', payload: { res } });
     },
+    *imageSearch(
+      {
+        payload: { assetId, term },
+      },
+      { call, put },
+    ) {
+      const res = yield call(basicService.imageSearch, { assetId, term });
+      yield put({ type: 'putImageSearchInfo', payload: { res } });
+    },
     *containerList(
       {
         payload: { id },
@@ -73,7 +83,7 @@ export default {
     *containerStart(
       {
         payload: { assetId, containerId },
-        callback
+        callback,
       },
       { call, put },
     ) {
@@ -85,7 +95,7 @@ export default {
     *containerPause(
       {
         payload: { assetId, containerId },
-        callback
+        callback,
       },
       { call, put },
     ) {
@@ -97,7 +107,7 @@ export default {
     *containerUnpause(
       {
         payload: { assetId, containerId },
-        callback
+        callback,
       },
       { call, put },
     ) {
@@ -109,7 +119,7 @@ export default {
     *containerStop(
       {
         payload: { assetId, containerId },
-        callback
+        callback,
       },
       { call, put },
     ) {
@@ -121,9 +131,7 @@ export default {
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      return history.listen(location => {
-       
-      });
+      return history.listen(location => {});
     },
   },
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 import { Table, Button, Card } from 'antd';
 import styles from './panel.css';
+import ImageSearchModel from '../dialog/imageSearchDialog';
 
 const imageColumn = [
   {
@@ -47,6 +48,10 @@ const imageColumn = [
 ];
 
 class ImagePanel extends React.Component {
+  state = {
+    visible: false,
+  };
+
   componentDidMount = () => {
     const id = this.props.assetId;
     this.props.dispatch({
@@ -98,6 +103,11 @@ class ImagePanel extends React.Component {
     return data;
   };
 
+  toggleDialog = () => {
+    this.setState({
+      visible: !this.state.visible,
+    });
+  };
   render() {
     let dataSource = [];
     if (this.props.imageInfo && this.props.imageInfo.Res) {
@@ -106,13 +116,18 @@ class ImagePanel extends React.Component {
 
     return (
       <div>
+        <ImageSearchModel
+          assetId={this.props.assetId}
+          visible={this.state.visible}
+          close={this.toggleDialog}
+        />
         <Card
           extra={
             <div className={styles.btn_block}>
-              <Button icon="plus" onClick={this.test}>
-                拉取
+              <Button icon="plus">拉取</Button>
+              <Button icon="edit" onClick={this.toggleDialog}>
+                搜索
               </Button>
-              <Button icon="edit">搜索</Button>
             </div>
           }
         >

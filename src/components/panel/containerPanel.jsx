@@ -124,6 +124,14 @@ class ContainerPanel extends React.Component {
     });
   };
 
+  queryBasicInfo = () => {
+    const id = this.props.assetId;
+    this.props.dispatch({
+      type: 'dockerBasic/dockerInfo',
+      payload: { id },
+    });
+  }
+
   dispatchContainerCommand = (assetId, containerId, type) => {
     let dispatchType = 'dockerBasic/containerStart';
     let tip = '启动';
@@ -152,6 +160,8 @@ class ContainerPanel extends React.Component {
           message.error(`${tip}失败`, 1);
         }
         this.queryContainerList();
+        // 同步刷新基本信息
+        this.queryBasicInfo();
       },
     });
   };
