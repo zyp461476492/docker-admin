@@ -94,6 +94,18 @@ export default {
         callback(res.Res);
       }
     },
+    *containerUnpause(
+      {
+        payload: { assetId, containerId },
+        callback
+      },
+      { call, put },
+    ) {
+      const res = yield call(basicService.containerUnpause, { assetId, containerId });
+      if (callback && typeof callback === 'function') {
+        callback(res.Res);
+      }
+    },
     *containerStop(
       {
         payload: { assetId, containerId },

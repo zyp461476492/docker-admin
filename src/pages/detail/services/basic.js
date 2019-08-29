@@ -20,6 +20,10 @@ export async function containerPause({ assetId, containerId }) {
   return request(`/api/container/pause?assetId=${assetId}&containerId=${containerId}`);
 }
 
+export async function containerUnpause({ assetId, containerId }) {
+  return request(`/api/container/unpause?assetId=${assetId}&containerId=${containerId}`);
+}
+
 export async function containerStop({ assetId, containerId }) {
   return request(`/api/container/stop?assetId=${assetId}&containerId=${containerId}`);
 }

@@ -133,6 +133,9 @@ class ContainerPanel extends React.Component {
     } else if (type === 'stop') {
       dispatchType = 'dockerBasic/containerStop';
       tip = '停止';
+    } else if (type === 'unpause') {
+      dispatchType = 'dockerBasic/containerUnpause';
+      tip = '恢复';
     }
 
     this.props.dispatch({
@@ -154,7 +157,6 @@ class ContainerPanel extends React.Component {
   };
 
   execCommand = type => {
-    console.log('click');
     const length = this.state.selectedRowKeys.length;
     if (length <= 0) {
       message.warning('请选择一条数据', 1);
@@ -188,6 +190,7 @@ class ContainerPanel extends React.Component {
               <ButtonGroup>
                 <Button onClick={this.execCommand.bind(this, 'start')} icon="caret-right"></Button>
                 <Button onClick={this.execCommand.bind(this, 'pause')} icon="pause"></Button>
+                <Button onClick={this.execCommand.bind(this, 'unpause')} icon="reload"></Button>
                 <Button onClick={this.execCommand.bind(this, 'stop')} icon="stop"></Button>
               </ButtonGroup>
             </div>
