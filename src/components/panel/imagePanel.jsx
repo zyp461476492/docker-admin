@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Table, Button, Card } from 'antd';
 import styles from './panel.css';
 import ImageSearchModel from '../dialog/imageSearchDialog';
+import ImagePullModel from '../dialog/imagePullDialog';
 
 const imageColumn = [
   {
@@ -49,7 +50,8 @@ const imageColumn = [
 
 class ImagePanel extends React.Component {
   state = {
-    visible: false,
+    searchVisible: false,
+    pullVisible: false
   };
 
   componentDidMount = () => {
@@ -103,9 +105,15 @@ class ImagePanel extends React.Component {
     return data;
   };
 
-  toggleDialog = () => {
+  toggleSearchDialog = () => {
     this.setState({
-      visible: !this.state.visible,
+      searchVisible: !this.state.searchVisible,
+    });
+  };
+
+  togglePullDialog = () => {
+    this.setState({
+      pullVisible: !this.state.pullVisible,
     });
   };
   render() {
@@ -118,14 +126,19 @@ class ImagePanel extends React.Component {
       <div>
         <ImageSearchModel
           assetId={this.props.assetId}
-          visible={this.state.visible}
-          close={this.toggleDialog}
+          visible={this.state.searchVisible}
+          close={this.toggleSearchDialog}
+        />
+        <ImagePullModel
+          assetId={this.props.assetId}
+          visible={this.state.pullVisible}
+          close={this.togglePullDialog}
         />
         <Card
           extra={
             <div className={styles.btn_block}>
-              <Button icon="plus">拉取</Button>
-              <Button icon="edit" onClick={this.toggleDialog}>
+              <Button icon="plus" onClick={this.togglePullDialog}>拉取</Button>
+              <Button icon="edit" onClick={this.toggleSearchDialog}>
                 搜索
               </Button>
             </div>
