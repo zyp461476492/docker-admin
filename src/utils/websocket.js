@@ -1,5 +1,5 @@
 const webSocketReq = (url, open, close, message, error) => {
-  const websocket = new WebSocket(url);
+  let websocket = new WebSocket(url);
   websocket.onopen = function(evt) {
     open(evt);
   };
@@ -12,6 +12,7 @@ const webSocketReq = (url, open, close, message, error) => {
   websocket.onerror = function(evt) {
     error(evt);
   };
+  return websocket;
 };
 
 export default webSocketReq;

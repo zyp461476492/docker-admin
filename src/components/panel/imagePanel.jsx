@@ -1,4 +1,4 @@
-import React from 'react';
+import React  from 'react';
 import { connect } from 'dva';
 import { Table, Button, Card } from 'antd';
 import styles from './panel.css';
@@ -55,14 +55,10 @@ class ImagePanel extends React.Component {
   };
 
   componentDidMount = () => {
-    const id = this.props.assetId;
-    this.props.dispatch({
-      type: 'dockerBasic/imageList',
-      payload: { id },
-    });
+    this.queryImageList();
   };
 
-  test = () => {
+  queryImageList = () => {
     const id = this.props.assetId;
     this.props.dispatch({
       type: 'dockerBasic/imageList',
@@ -115,6 +111,10 @@ class ImagePanel extends React.Component {
     this.setState({
       pullVisible: !this.state.pullVisible,
     });
+
+    if (this.state.pullVisible) {
+      this.queryImageList();
+    }
   };
   render() {
     let dataSource = [];
