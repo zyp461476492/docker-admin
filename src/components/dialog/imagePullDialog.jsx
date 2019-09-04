@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Button, Row, Col, Modal, Input, message, Typography } from 'antd';
-import styles from './dialog.css';
 import webSocketReq from '@/utils/websocket';
 import { css } from 'glamor';
 import ScrollToBottom from 'react-scroll-to-bottom';
@@ -52,6 +51,11 @@ const evtMsgParser = (info, infoList) => {
 };
 
 class ImagePullModel extends React.Component {
+  componentWillUnmount () {
+    if (websocketClient) {
+      websocketClient.close();
+    }
+  }
   state = {
     term: '',
     infoList: [],
@@ -61,25 +65,30 @@ class ImagePullModel extends React.Component {
 
   imagePullStop = () => {
     if (websocketClient) {
+      websocketClient.close();
+      websocketClient = null;
+      let infoList = this.state.infoList;
+      infoList.push("发送连接中断信号");
+      infoList.push("连接中断中...");
       this.setState({
         prcessLoading: false,
         closeLoading: true,
-      });
-      websocketClient.close();
-      websocketClient = null;
-      this.setState({
-        prcessLoading: false,
-        closeLoading: false,
+        infoList: infoList,
       });
     } else {
-      message.info('无正在处理的内容', 1);
+      message.info('没有正在处理的任务', 1);
     }
+    
   };
 
   imagePullBegin = () => {
     if (this.state.term) {
-      const assetId = this.props.assetId;
-      this.imagePullProcess(assetId, this.state.term);
+      if (this.state.closeLoading) {
+        message.info('存在处理中的任务，请稍后', 1);
+      } else {
+        const assetId = this.props.assetId;
+        this.imagePullProcess(assetId, this.state.term);
+      }
     } else {
       message.info('请输入内容', 1);
     }
@@ -104,8 +113,10 @@ class ImagePullModel extends React.Component {
     infoList.push('处理完毕!');
     this.setState({
       infoList: infoList,
+      closeLoading: false,
       prcessLoading: false,
     });
+    websocketClient = null;
   };
 
   onMsg = evt => {
