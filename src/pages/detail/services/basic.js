@@ -8,12 +8,20 @@ export async function queryImageList({ id }) {
   return request(`/api/image/list?index=${id}`);
 }
 
+export async function queryImageHistory({ assetId, imageId }) {
+  return request(`/api/image/history?assetId=${assetId}&imageId=${imageId}`);
+}
+
 export async function queryContainerList({ id }) {
   return request(`/api/container/list?index=${id}`);
 }
 
 export async function imageSearch({ assetId, term }) {
   return request(`/api/image/search?assetId=${assetId}&term=${term}`);
+}
+
+export async function imageDel({ assetId, imageId }) {
+  return request(`/api/image/del?assetId=${assetId}&imageId=${imageId}`);
 }
 
 export async function containerStart({ assetId, containerId }) {

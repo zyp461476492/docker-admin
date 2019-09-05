@@ -7,6 +7,7 @@ export default {
     imageInfo: null,
     containerInfo: null,
     imageSearchInfo: null,
+    imageHistory: null,
     res: null,
   },
   reducers: {
@@ -25,6 +26,14 @@ export default {
       },
     ) {
       return { ...state, imageInfo: res };
+    },
+    putImageHistoryInfo(
+      state,
+      {
+        payload: { res },
+      },
+    ) {
+      return { ...state, imageHistory: res };
     },
     putContainerInfo(
       state,
@@ -62,6 +71,15 @@ export default {
       const res = yield call(basicService.queryImageList, { id });
       yield put({ type: 'putImageInfo', payload: { res } });
     },
+    *imageHistory(
+      {
+        payload: { assetId, imageId },
+      },
+      { call, put },
+    ) {
+      const res = yield call(basicService.queryImageHistory, { assetId, imageId });
+      yield put({ type: 'putImageHistoryInfo', payload: { res } });
+    },
     *imageSearch(
       {
         payload: { assetId, term },
@@ -79,6 +97,19 @@ export default {
     ) {
       const res = yield call(basicService.queryContainerList, { id });
       yield put({ type: 'putContainerInfo', payload: { res } });
+    },
+    *ImageDel(
+      {
+        payload: { assetId, imageId },
+        callback,
+      },
+      { call, put },
+    ) {
+      const res = yield call(basicService.imageDel, { assetId, imageId });
+      if (callback && typeof callback === 'function') {
+        callback(res.Res);
+      }
+      yield put({ type: 'imageList', payload: { assetId } });
     },
     *containerStart(
       {
