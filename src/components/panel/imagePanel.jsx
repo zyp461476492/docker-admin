@@ -1,6 +1,6 @@
-import React  from 'react';
+import React from 'react';
 import { connect } from 'dva';
-import { Table, Button, Card } from 'antd';
+import { message, Table, Button, Card } from 'antd';
 import styles from './panel.css';
 import ImageSearchModel from '../dialog/imageSearchDialog';
 import ImagePullModel from '../dialog/imagePullDialog';
@@ -31,21 +31,6 @@ const imageColumn = [
     dataIndex: 'size',
     key: 'size',
   },
-  {
-    title: 'OPERATE',
-    dataIndex: 'operate',
-    key: 'operate',
-    render: (text, record, index) => {
-      return (
-        <div>
-          <Button icon="delete" type="danger">
-            删除
-          </Button>
-          <Button icon="delete">历史</Button>
-        </div>
-      );
-    },
-  },
 ];
 
 class ImagePanel extends React.Component {
@@ -55,6 +40,14 @@ class ImagePanel extends React.Component {
     selectedRowKeys: [],
     selectedRow: [],
   };
+
+  queryBasicInfo = () => {
+    const id = this.props.assetId;
+    this.props.dispatch({
+      type: 'dockerBasic/dockerInfo',
+      payload: { id },
+    });
+  }
 
   selectRow = record => {
     const selectedRowKeys = [...this.state.selectedRowKeys];
@@ -132,6 +125,47 @@ class ImagePanel extends React.Component {
       this.queryImageList();
     }
   };
+
+  imageDel = () => {
+    const length = this.state.selectedRowKeys.length;
+    if (length <= 0) {
+      message.warning('请选择一条数据', 1);
+    } else if (length === 1) {
+      const assetId = this.props.assetId;
+      const imageId = this.state.selectedRowKeys[0];
+      console.log(`assetId:${assetId} imageId ${imageId}`);
+      message.loading("删除中...")
+      this.props.dispatch({
+        type: 'dockerBasic/imageDel',
+        payload: {
+          assetId,
+          imageId
+        },
+        callback: res => {
+          message.destroy();
+          if (res) {
+            message.success(`删除成功`, 1);
+          } else {
+            message.error(`删除失败`, 1);
+          }
+          this.queryBasicInfo();
+        }
+      });
+    } else {
+      message.warning('暂不支持批量操作', 1);
+    }
+  };
+
+  imageHistory = () => {
+    const length = this.state.selectedRowKeys.length;
+    if (length === 1) {
+      const assetId = this.props.assetId;
+      const imageId = this.state.selectedRowKeys[0];
+    } else {
+      message.warning('请选择一条数据', 1);
+    }
+  };
+
   render() {
     const { selectedRowKeys } = this.state;
     const rowSelection = {
@@ -159,9 +193,17 @@ class ImagePanel extends React.Component {
         <Card
           extra={
             <div className={styles.btn_block}>
-              <Button icon="plus" onClick={this.togglePullDialog}>拉取</Button>
+              <Button icon="plus" onClick={this.togglePullDialog}>
+                拉取
+              </Button>
               <Button icon="edit" onClick={this.toggleSearchDialog}>
                 搜索
+              </Button>
+              <Button icon="delete" type="danger" onClick={this.imageDel}>
+                删除
+              </Button>
+              <Button icon="history" onClick={this.imageHistory}>
+                历史
               </Button>
             </div>
           }

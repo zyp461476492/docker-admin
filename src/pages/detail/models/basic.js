@@ -98,7 +98,7 @@ export default {
       const res = yield call(basicService.queryContainerList, { id });
       yield put({ type: 'putContainerInfo', payload: { res } });
     },
-    *ImageDel(
+    *imageDel(
       {
         payload: { assetId, imageId },
         callback,
@@ -106,10 +106,11 @@ export default {
       { call, put },
     ) {
       const res = yield call(basicService.imageDel, { assetId, imageId });
+      const id = assetId;
       if (callback && typeof callback === 'function') {
         callback(res.Res);
       }
-      yield put({ type: 'imageList', payload: { assetId } });
+      yield put({ type: 'imageList', payload: { id } });
     },
     *containerStart(
       {
