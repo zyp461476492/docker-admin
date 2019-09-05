@@ -51,7 +51,23 @@ const imageColumn = [
 class ImagePanel extends React.Component {
   state = {
     searchVisible: false,
-    pullVisible: false
+    pullVisible: false,
+    selectedRowKeys: [],
+    selectedRow: [],
+  };
+
+  selectRow = record => {
+    const selectedRowKeys = [...this.state.selectedRowKeys];
+    if (selectedRowKeys.indexOf(record.id) >= 0) {
+      selectedRowKeys.splice(selectedRowKeys.indexOf(record.id), 1);
+    } else {
+      selectedRowKeys.push(record.id);
+    }
+    this.setState({ selectedRowKeys });
+  };
+
+  onSelectedRowKeysChange = selectedRowKeys => {
+    this.setState({ selectedRowKeys });
   };
 
   componentDidMount = () => {
@@ -117,6 +133,12 @@ class ImagePanel extends React.Component {
     }
   };
   render() {
+    const { selectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectedRowKeysChange,
+    };
+
     let dataSource = [];
     if (this.props.imageInfo && this.props.imageInfo.Res) {
       dataSource = this.parseList(this.props.imageInfo.Obj);
@@ -149,6 +171,12 @@ class ImagePanel extends React.Component {
             loading={this.props.loading}
             columns={imageColumn}
             dataSource={dataSource}
+            rowSelection={rowSelection}
+            onRow={record => ({
+              onClick: () => {
+                this.selectRow(record);
+              },
+            })}
           />
         </Card>
       </div>

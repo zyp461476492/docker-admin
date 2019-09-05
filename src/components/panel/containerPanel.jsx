@@ -212,7 +212,6 @@ class ContainerPanel extends React.Component {
             columns={containerColumn}
             dataSource={dataSource}
             rowSelection={rowSelection}
-            onChange={this.handleTableChange}
             onRow={record => ({
               onClick: () => {
                 this.selectRow(record);
