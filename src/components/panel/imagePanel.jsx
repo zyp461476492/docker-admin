@@ -4,6 +4,7 @@ import { message, Table, Button, Card } from 'antd';
 import styles from './panel.css';
 import ImageSearchModel from '../dialog/imageSearchDialog';
 import ImagePullModel from '../dialog/imagePullDialog';
+import ImageHistroyDialog from '../dialog/imageHistroyDialog';
 
 const imageColumn = [
   {
@@ -37,6 +38,7 @@ class ImagePanel extends React.Component {
   state = {
     searchVisible: false,
     pullVisible: false,
+    historyVisible: false,
     selectedRowKeys: [],
     selectedRow: [],
   };
@@ -47,7 +49,7 @@ class ImagePanel extends React.Component {
       type: 'dockerBasic/dockerInfo',
       payload: { id },
     });
-  }
+  };
 
   selectRow = record => {
     const selectedRowKeys = [...this.state.selectedRowKeys];
@@ -116,6 +118,12 @@ class ImagePanel extends React.Component {
     });
   };
 
+  toggleHistoryDialog = () => {
+    this.setState({
+      historyVisible: !this.state.historyVisible,
+    });
+  };
+
   togglePullDialog = () => {
     this.setState({
       pullVisible: !this.state.pullVisible,
@@ -134,12 +142,12 @@ class ImagePanel extends React.Component {
       const assetId = this.props.assetId;
       const imageId = this.state.selectedRowKeys[0];
       console.log(`assetId:${assetId} imageId ${imageId}`);
-      message.loading("删除中...")
+      message.loading('删除中...');
       this.props.dispatch({
         type: 'dockerBasic/imageDel',
         payload: {
           assetId,
-          imageId
+          imageId,
         },
         callback: res => {
           message.destroy();
@@ -149,7 +157,7 @@ class ImagePanel extends React.Component {
             message.error(`删除失败`, 1);
           }
           this.queryBasicInfo();
-        }
+        },
       });
     } else {
       message.warning('暂不支持批量操作', 1);
@@ -161,6 +169,14 @@ class ImagePanel extends React.Component {
     if (length === 1) {
       const assetId = this.props.assetId;
       const imageId = this.state.selectedRowKeys[0];
+      this.props.dispatch({
+        type: 'dockerBasic/imageHistory',
+        payload: {
+          assetId,
+          imageId,
+        }
+      });
+      this.toggleHistoryDialog();
     } else {
       message.warning('请选择一条数据', 1);
     }
@@ -185,6 +201,7 @@ class ImagePanel extends React.Component {
           visible={this.state.searchVisible}
           close={this.toggleSearchDialog}
         />
+        <ImageHistroyDialog visible={this.state.historyVisible} close={this.toggleHistoryDialog} />
         <ImagePullModel
           assetId={this.props.assetId}
           visible={this.state.pullVisible}
