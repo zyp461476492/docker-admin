@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import styles from './panel.css';
 import { Skeleton, Descriptions, Card, Row, Col } from 'antd';
 import StatusTip from '../../components/status-tip/statusTip';
+import ReactJson from 'react-json-view';
 
 class BasicPanel extends React.Component {
   componentDidMount = () => {
@@ -14,9 +15,12 @@ class BasicPanel extends React.Component {
   };
 
   render() {
-      let context = <Skeleton active />;
-      if (this.props.dockerInfo && this.props.dockerInfo.Res) {
-          context = <div>
+    let context = <Skeleton active />;
+    if (this.props.dockerInfo && this.props.dockerInfo.Res) {
+      console.log(typeof this.props.dockerInfo.Obj);
+      console.log(this.props.dockerInfo.Obj);
+      context = (
+        <div>
           <div className={styles.statistics}>
             <Row type="flex" gutter={32}>
               <Col span={12}>
@@ -45,7 +49,7 @@ class BasicPanel extends React.Component {
               </Col>
             </Row>
           </div>
-  
+
           <div>
             <Row type="flex" gutter={16}>
               <Col span={8}>
@@ -86,7 +90,7 @@ class BasicPanel extends React.Component {
               </Col>
             </Row>
           </div>
-  
+
           <div>
             <Row type="flex" className={styles.block}>
               <Col span={24}>
@@ -159,7 +163,7 @@ class BasicPanel extends React.Component {
                 </Card>
               </Col>
             </Row>
-  
+
             <Row type="flex" className={styles.block}>
               <Col span={24}>
                 <Card bordered={false}>
@@ -192,7 +196,7 @@ class BasicPanel extends React.Component {
                 </Card>
               </Col>
             </Row>
-  
+
             <Row type="flex" className={styles.block}>
               <Col span={24}>
                 <Card bordered={false}>
@@ -244,17 +248,31 @@ class BasicPanel extends React.Component {
               </Col>
             </Row>
           </div>
+          <div>
+            <Row type="flex" className={styles.block}>
+              <Col span={24}>
+                <Card bordered={false}>
+                  <Descriptions title="JSON" bordered={true}>
+                    <Descriptions.Item label="RAW">
+                      <ReactJson src={this.props.dockerInfo.Obj} />
+                    </Descriptions.Item>
+                  </Descriptions>
+                </Card>
+              </Col>
+            </Row>
+          </div>
         </div>
-      }
+      );
+    }
     return context;
   }
 }
 
 function mapStateToProps(state) {
-    return {
-      dockerInfo: state.dockerBasic.dockerInfo,
-      loading: state.loading.models.dockerBasic,
-    };
-  }
-  
-  export default connect(mapStateToProps)(BasicPanel);
+  return {
+    dockerInfo: state.dockerBasic.dockerInfo,
+    loading: state.loading.models.dockerBasic,
+  };
+}
+
+export default connect(mapStateToProps)(BasicPanel);
