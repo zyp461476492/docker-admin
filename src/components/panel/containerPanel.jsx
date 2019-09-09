@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 import styles from './panel.css';
 import { message, Table, Button, Card } from 'antd';
+import ContainerLogsDialog from '../dialog/containerLogsDialog';
 
 const ButtonGroup = Button.Group;
 
@@ -52,6 +53,7 @@ class ContainerPanel extends React.Component {
   state = {
     selectedRowKeys: [],
     selectedRow: [],
+    logVisible: false,
   };
 
   componentDidMount = () => {
@@ -180,6 +182,12 @@ class ContainerPanel extends React.Component {
     }
   };
 
+  toggleLogDialog = () => {
+    this.setState({
+      logVisible: !this.state.logVisible
+    })
+  }
+
   render() {
     const { selectedRowKeys } = this.state;
     const rowSelection = {
@@ -194,9 +202,18 @@ class ContainerPanel extends React.Component {
 
     return (
       <div>
+        <ContainerLogsDialog
+          assetId={this.props.assetId}
+          containerId = {this.state.selectedRowKeys[0]}
+          visible={this.state.logVisible}
+          close={this.toggleLogDialog}
+        />
         <Card
           extra={
             <div className={styles.btn_block}>
+              <ButtonGroup>
+                <Button onClick={this.toggleLogDialog} icon="caret-right">日志</Button>
+              </ButtonGroup>
               <ButtonGroup>
                 <Button onClick={this.execCommand.bind(this, 'start')} icon="caret-right"></Button>
                 <Button onClick={this.execCommand.bind(this, 'pause')} icon="pause"></Button>
