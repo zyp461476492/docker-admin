@@ -1,5 +1,4 @@
 import style from './index.css';
-// import zhCN from 'antd/es/locale-provider/zh_CN';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 

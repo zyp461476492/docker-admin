@@ -94,7 +94,7 @@ class ImagePanel extends React.Component {
   };
 
   sizeFormatter = size => {
-    return Math.round(size / (1000 * 1000)) + 'MB';
+    return Math.round(size / (1024 * 1024)) + 'MB';
   };
 
   parseList = list => {

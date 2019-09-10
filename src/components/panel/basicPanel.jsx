@@ -254,7 +254,7 @@ class BasicPanel extends React.Component {
                 <Card bordered={false}>
                   <Descriptions title="JSON" bordered={true}>
                     <Descriptions.Item label="RAW">
-                      <ReactJson src={this.props.dockerInfo.Obj} />
+                      <ReactJson collapsed={true} src={this.props.dockerInfo.Obj} />
                     </Descriptions.Item>
                   </Descriptions>
                 </Card>

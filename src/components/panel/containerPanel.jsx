@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import styles from './panel.css';
 import { message, Table, Button, Card } from 'antd';
 import ContainerLogsDialog from '../dialog/containerLogsDialog';
+import ContainerStatsDialog from '../dialog/containerStatsDialog';
 
 const ButtonGroup = Button.Group;
 
@@ -54,6 +55,7 @@ class ContainerPanel extends React.Component {
     selectedRowKeys: [],
     selectedRow: [],
     logVisible: false,
+    statsVisible: false,
   };
 
   componentDidMount = () => {
@@ -132,7 +134,7 @@ class ContainerPanel extends React.Component {
       type: 'dockerBasic/dockerInfo',
       payload: { id },
     });
-  }
+  };
 
   dispatchContainerCommand = (assetId, containerId, type) => {
     let dispatchType = 'dockerBasic/containerStart';
@@ -184,9 +186,15 @@ class ContainerPanel extends React.Component {
 
   toggleLogDialog = () => {
     this.setState({
-      logVisible: !this.state.logVisible
-    })
-  }
+      logVisible: !this.state.logVisible,
+    });
+  };
+
+  toggleStatsDialog = () => {
+    this.setState({
+      statsVisible: !this.state.statsVisible,
+    });
+  };
 
   render() {
     const { selectedRowKeys } = this.state;
@@ -204,15 +212,26 @@ class ContainerPanel extends React.Component {
       <div>
         <ContainerLogsDialog
           assetId={this.props.assetId}
-          containerId = {this.state.selectedRowKeys[0]}
+          containerId={this.state.selectedRowKeys[0]}
           visible={this.state.logVisible}
           close={this.toggleLogDialog}
+        />
+        <ContainerStatsDialog
+          assetId={this.props.assetId}
+          containerId={this.state.selectedRowKeys[0]}
+          visible={this.state.statsVisible}
+          close={this.toggleStatsDialog}
         />
         <Card
           extra={
             <div className={styles.btn_block}>
               <ButtonGroup>
-                <Button onClick={this.toggleLogDialog} icon="caret-right">日志</Button>
+                <Button onClick={this.toggleLogDialog} icon="caret-right">
+                  日志
+                </Button>
+                <Button onClick={this.toggleStatsDialog} icon="caret-right">
+                  状态
+                </Button>
               </ButtonGroup>
               <ButtonGroup>
                 <Button onClick={this.execCommand.bind(this, 'start')} icon="caret-right"></Button>

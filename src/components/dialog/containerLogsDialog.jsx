@@ -15,12 +15,10 @@ const { Text } = Typography;
 
 class LogPanel extends React.Component {
   componentWillMount() {
-    console.log('mount');
     this.containerLogsBegin();
   }
 
   componentWillUnmount() {
-    console.log('unmount');
     if (websocketClient) {
       websocketClient.close();
       websocketClient = null;
