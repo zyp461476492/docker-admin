@@ -1,12 +1,13 @@
 import style from './index.css';
-import zhCN from 'antd/es/locale-provider/zh_CN';
-import { LocaleProvider } from 'antd';
+// import zhCN from 'antd/es/locale-provider/zh_CN';
+import { ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
 
 function BasicLayout(props) {
   return (
-    <LocaleProvider locale={zhCN}>
+    <ConfigProvider  locale={zhCN}>
       <div className={style.container}>{props.children}</div>
-    </LocaleProvider>
+    </ConfigProvider >
   );
 }
 
