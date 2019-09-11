@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'dva';
-import styles from './panel.css';
 import { message, Table, Button, Card } from 'antd';
 import ContainerLogsDialog from '../dialog/containerLogsDialog';
 import ContainerStatsDialog from '../dialog/containerStatsDialog';
@@ -184,6 +183,24 @@ class ContainerPanel extends React.Component {
     }
   };
 
+  openLogDialog = () => {
+    const length = this.state.selectedRowKeys.length;
+    if (length === 1) {
+      this.toggleLogDialog();
+    } else {
+      message.warning('请选择一条数据', 1);
+    }
+  };
+
+  openStatsDialog = () => {
+    const length = this.state.selectedRowKeys.length;
+    if (length === 1) {
+      this.toggleStatsDialog();
+    } else {
+      message.warning('请选择一条数据', 1);
+    }
+  };
+
   toggleLogDialog = () => {
     this.setState({
       logVisible: !this.state.logVisible,
@@ -224,16 +241,19 @@ class ContainerPanel extends React.Component {
         />
         <Card
           extra={
-            <div className={styles.btn_block}>
+            <div>
               <ButtonGroup>
-                <Button onClick={this.toggleLogDialog} icon="caret-right">
+                <Button onClick={this.openLogDialog} icon="plus">
+                  新增
+                </Button>
+                <Button onClick={this.openLogDialog} icon="snippets">
                   日志
                 </Button>
-                <Button onClick={this.toggleStatsDialog} icon="caret-right">
+                <Button onClick={this.openStatsDialog} icon="monitor">
                   状态
                 </Button>
               </ButtonGroup>
-              <ButtonGroup>
+              <ButtonGroup style={{ marginLeft: 10 }}>
                 <Button onClick={this.execCommand.bind(this, 'start')} icon="caret-right"></Button>
                 <Button onClick={this.execCommand.bind(this, 'pause')} icon="pause"></Button>
                 <Button onClick={this.execCommand.bind(this, 'unpause')} icon="reload"></Button>

@@ -1,17 +1,12 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Result, Descriptions, Skeleton, Tabs, Icon, Modal, Typography } from 'antd';
+import { Result, Descriptions, Skeleton, Tabs, Icon, Modal } from 'antd';
 import webSocketReq from '@/utils/websocket';
-import { css } from 'glamor';
 import ReactJson from 'react-json-view';
 
 let websocketClient = null;
 
 const { TabPane } = Tabs;
-
-const ROOT_CSS = css({
-  height: 300,
-});
 
 const sizeConvert = size => {
   if (size < 1024) {
@@ -42,8 +37,6 @@ const dataParser = info => {
     memoryUI: `${memoryUsage}/${memoryLimit}`,
   };
 };
-
-const { Text } = Typography;
 
 class StatsPanel extends React.Component {
   componentWillMount() {
