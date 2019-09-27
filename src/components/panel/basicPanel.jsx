@@ -17,8 +17,6 @@ class BasicPanel extends React.Component {
   render() {
     let context = <Skeleton active />;
     if (this.props.dockerInfo && this.props.dockerInfo.Res) {
-      console.log(typeof this.props.dockerInfo.Obj);
-      console.log(this.props.dockerInfo.Obj);
       context = (
         <div>
           <div className={styles.statistics}>

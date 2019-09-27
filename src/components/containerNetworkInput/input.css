@@ -1,0 +1,34 @@
+.dynamicDeleteButton {
+  vertical-align: center;
+  display: inline-block;
+  float: none;
+  border-radius: 0;
+  margin-left: 10px;
+  height: 32px;
+}
+
+.icon {
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+  font-size: 24px;
+  color: #999;
+  transition: all 0.3s;
+}
+
+.icon:hover {
+  color: #777;
+}
+.icon[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.dynamic-delete-button:hover {
+  color: #777;
+}
+
+.dynamic-delete-button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
