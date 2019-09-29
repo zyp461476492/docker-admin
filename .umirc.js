@@ -1,4 +1,6 @@
 // ref: https://umijs.org/config/
+import config from '@/config.json';
+
 export default {
   treeShaking: true,
   plugins: [
@@ -26,9 +28,9 @@ export default {
   ],
   "proxy": {
     "/api": {
-      "target": "http://localhost:8080",
+      "target": config.apiUrl,
       "changeOrigin": true,
-      "pathRewrite": { "^/api" : "http://localhost:8080" }
+      "pathRewrite": { "^/api" : config.apiUrl }
     }
   }
 };

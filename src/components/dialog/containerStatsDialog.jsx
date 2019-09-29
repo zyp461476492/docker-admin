@@ -3,31 +3,21 @@ import { connect } from 'dva';
 import { Result, Descriptions, Skeleton, Tabs, Icon, Modal } from 'antd';
 import webSocketReq from '@/utils/websocket';
 import ReactJson from 'react-json-view';
+import config from '@/config.json';
+
 
 let websocketClient = null;
 
 const { TabPane } = Tabs;
 
-const sizeConvert = size => {
-  if (size < 1024) {
-    return `${size}B`;
-  } else if (size >= 1024 && size < 1024 * 1024) {
-    size = (size / 1024).toFixed(2);
-    return `${size}KB`;
-  } else {
-    size = (size / (1024 * 1024)).toFixed(2);
-    return `${size}MB`;
-  }
-};
-
 const dataParser = info => {
-  
-  const cpu = (info.cpu_stats.cpu_usage.total_usage / info.cpu_stats.system_cpu_usage * 100).toFixed(2);
-  const memory = (info.memory_stats.usage / info.memory_stats.limit * 100 ).toFixed(2) ;
+  const cpu = (
+    (info.cpu_stats.cpu_usage.total_usage / info.cpu_stats.system_cpu_usage) *
+    100
+  ).toFixed(2);
+  const memory = ((info.memory_stats.usage / info.memory_stats.limit) * 100).toFixed(2);
   const memoryUsage = (info.memory_stats.usage / (1024 * 1024)).toFixed(2) + 'MB';
   const memoryLimit = (info.memory_stats.limit / (1024 * 1024)).toFixed(2) + 'MB';
-  // const netIO = sizeConvert(info.networks.eth0);
-  // const blockIO = '';
   return {
     id: info.id.slice(0, 6),
     name: info.name,
@@ -40,7 +30,7 @@ const dataParser = info => {
 
 class StatsPanel extends React.Component {
   componentWillMount() {
-    this.containerLogsBegin();
+    this.containerStatsBegin();
   }
 
   componentWillUnmount() {
@@ -57,10 +47,10 @@ class StatsPanel extends React.Component {
     infoList: [],
   };
 
-  containerLogsBegin = () => {
+  containerStatsBegin = () => {
     const assetId = this.props.assetId;
     const containerId = this.props.containerId;
-    const url = `ws://127.0.0.1:8080/container/stats?assetId=${assetId}&containerId=${containerId}`;
+    const url = `${config.webSocketUrl}/container/stats?assetId=${assetId}&containerId=${containerId}`;
     websocketClient = webSocketReq(url, this.onOpen, this.onClose, this.onMsg, this.onErr);
   };
 
@@ -71,9 +61,11 @@ class StatsPanel extends React.Component {
   };
 
   onMsg = evt => {
-    this.setState({
-      info: evt.data,
-    });
+    if (websocketClient) {
+      this.setState({
+        info: evt.data,
+      });
+    }
   };
 
   onErr = evt => {};
