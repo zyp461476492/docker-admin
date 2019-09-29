@@ -71,6 +71,7 @@ class ImagePanel extends React.Component {
 
   queryImageList = () => {
     const id = this.props.assetId;
+    this.clearSelect();
     this.props.dispatch({
       type: 'dockerBasic/imageList',
       payload: { id },
@@ -157,6 +158,7 @@ class ImagePanel extends React.Component {
             message.error(`删除失败`, 1);
           }
           this.queryBasicInfo();
+          this.clearSelect();
         },
       });
     } else {
@@ -181,6 +183,13 @@ class ImagePanel extends React.Component {
       message.warning('请选择一条数据', 1);
     }
   };
+
+  clearSelect = () => {
+    this.setState({
+      selectedRow: [],
+      selectedRowKeys: []
+    });
+  }
 
   render() {
     const { selectedRowKeys } = this.state;
