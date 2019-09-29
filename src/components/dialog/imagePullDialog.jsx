@@ -4,6 +4,7 @@ import { Button, Row, Col, Modal, Input, message, Typography } from 'antd';
 import webSocketReq from '@/utils/websocket';
 import { css } from 'glamor';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import config from '@/config.json';
 
 let websocketClient = null;
 
@@ -51,7 +52,7 @@ const evtMsgParser = (info, infoList) => {
 };
 
 class ImagePullModel extends React.Component {
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (websocketClient) {
       websocketClient.close();
     }
@@ -68,17 +69,15 @@ class ImagePullModel extends React.Component {
       websocketClient.close();
       websocketClient = null;
       let infoList = this.state.infoList;
-      infoList.push("发送连接中断信号");
-      infoList.push("连接中断中...");
+      infoList.push('已发送连接中断信号');
+      infoList.push('连接中断');
       this.setState({
         prcessLoading: false,
-        closeLoading: true,
         infoList: infoList,
       });
     } else {
       message.info('没有正在处理的任务', 1);
     }
-    
   };
 
   imagePullBegin = () => {
@@ -95,7 +94,7 @@ class ImagePullModel extends React.Component {
   };
 
   imagePullProcess = (assetId, term) => {
-    const url = `ws://127.0.0.1:8080/image/pull?assetId=${assetId}&term=${term}`;
+    const url = `${config.webSocketUrl}/image/pull?assetId=${assetId}&term=${term}`;
     websocketClient = webSocketReq(url, this.onOpen, this.onClose, this.onMsg, this.onErr);
   };
 
@@ -109,31 +108,28 @@ class ImagePullModel extends React.Component {
   };
 
   onClose = evt => {
-    const infoList = this.state.infoList;
-    infoList.push('处理完毕!');
-    this.setState({
-      infoList: infoList,
-      closeLoading: false,
-      prcessLoading: false,
-    });
     websocketClient = null;
   };
 
   onMsg = evt => {
     let infoList = this.state.infoList;
-    infoList = evtMsgParser(JSON.parse(evt.data), infoList);
-    this.setState({
-      infoList: infoList,
-    });
+    if (websocketClient) {
+      infoList = evtMsgParser(JSON.parse(evt.data), infoList);
+      this.setState({
+        infoList: infoList,
+      });
+    }
   };
 
   onErr = evt => {
     const infoList = this.state.infoList;
-    infoList.push('处理失败!');
-    this.setState({
-      infoList: infoList,
-      prcessLoading: false,
-    });
+    if (websocketClient) {
+      infoList.push('处理失败!');
+      this.setState({
+        infoList: infoList,
+        prcessLoading: false,
+      });
+    }
   };
 
   inputChange = e => {

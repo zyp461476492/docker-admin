@@ -75,12 +75,8 @@ const WrappedContainerForm = Form.create({ name: 'containerForm' })(ContainerFor
 class ContainerCreateModel extends React.Component {
   formRef = null;
 
-  state = {
-    form: null,
-  };
-
   submit = e => {
-    const { form } = this.form.props;
+    const { form } = this.formRef.props;
     form.validateFields((err, values) => {
       if (err) {
         return;
