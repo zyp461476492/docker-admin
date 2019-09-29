@@ -73,18 +73,18 @@ class ContainerFormPanel extends React.Component {
 const WrappedContainerForm = Form.create({ name: 'containerForm' })(ContainerFormPanel);
 
 class ContainerCreateModel extends React.Component {
+  formRef = null;
+
   state = {
     form: null,
   };
 
   submit = e => {
-    console.log(e);
-    const { form } = this.state.form.props;
+    const { form } = this.form.props;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
-      console.log(values);
       this.props.dispatch({
         type: 'dockerBasic/containerCreate',
         payload: {
@@ -115,7 +115,7 @@ class ContainerCreateModel extends React.Component {
         destroyOnClose={true}
         afterClose={this.props.refreshInfo}
       >
-        <WrappedContainerForm wrappedComponentRef={form => (this.state.form = form)} />
+        <WrappedContainerForm wrappedComponentRef={form => (this.formRef = form)} />
       </Modal>
     );
   }
