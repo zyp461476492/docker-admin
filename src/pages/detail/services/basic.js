@@ -24,8 +24,15 @@ export async function imageDel({ assetId, imageId }) {
   return request(`/api/image/del?assetId=${assetId}&imageId=${imageId}`);
 }
 
-export async function containerCreate({ assetId, containerName, imageName }) {
-  return request(`/api/container/create?assetId=${assetId}&containerName=${containerName}&imageName=${imageName}`);
+export async function containerCreate(requestBody) {
+  return request('/api/container/create', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    body: JSON.stringify(requestBody),
+  });
 }
 
 export async function containerRemove({ assetId, containerId }) {

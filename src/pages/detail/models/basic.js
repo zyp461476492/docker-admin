@@ -114,12 +114,12 @@ export default {
     },
     *containerCreate(
       {
-        payload: { assetId, containerName, imageName },
+        payload,
         callback,
       },
       { call },
     ) {
-      const res = yield call(basicService.containerCreate, { assetId, containerName, imageName });
+      const res = yield call(basicService.containerCreate, payload);
       if (callback && typeof callback === 'function') {
         callback(res);
       }

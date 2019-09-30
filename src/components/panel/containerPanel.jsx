@@ -214,7 +214,18 @@ class ContainerPanel extends React.Component {
     });
   };
 
-  
+  refreshInfo = () => {
+    this.queryContainerList();
+    this.queryBasicInfo();
+    this.clearSelect();
+  };
+
+  clearSelect = () => {
+    this.setState({
+      selectedRow: [],
+      selectedRowKeys: [],
+    });
+  };
 
   render() {
     const { selectedRowKeys } = this.state;

@@ -56,7 +56,7 @@ class ContainerFormPanel extends React.Component {
           {getFieldDecorator('imageName', {
             initialValue: this.props.repo,
             rules: [{ required: true, message: '请输入镜像名称' }],
-          })(<Input disabled/>)}
+          })(<Input disabled />)}
         </Form.Item>
         {formItems}
         <Form.Item>
@@ -83,12 +83,20 @@ class ContainerCreateModel extends React.Component {
       if (err) {
         return;
       }
+
+      let portList = [];
+      // 拼装 port 数组
+      for (let k of values.keys) {
+        portList.push(values[`portMap${k}`]);
+      }
+      console.log(portList);
       this.props.dispatch({
         type: 'dockerBasic/containerCreate',
         payload: {
-          assetId: this.props.assetId,
+          assetId: parseInt(this.props.assetId),
           containerName: values.containerName,
           imageName: values.imageName,
+          portList: portList
         },
         callback: response => {
           if (response.Res) {
