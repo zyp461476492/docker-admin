@@ -32,6 +32,7 @@ class ContainerFormPanel extends React.Component {
       keys: nextKeys,
     });
   };
+
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
     getFieldDecorator('keys', { initialValue: [] });
@@ -53,8 +54,9 @@ class ContainerFormPanel extends React.Component {
         </Form.Item>
         <Form.Item label="镜像名称">
           {getFieldDecorator('imageName', {
+            initialValue: this.props.repo,
             rules: [{ required: true, message: '请输入镜像名称' }],
-          })(<Input />)}
+          })(<Input disabled/>)}
         </Form.Item>
         {formItems}
         <Form.Item>
@@ -111,7 +113,10 @@ class ContainerCreateModel extends React.Component {
         destroyOnClose={true}
         afterClose={this.props.refreshInfo}
       >
-        <WrappedContainerForm wrappedComponentRef={form => (this.formRef = form)} />
+        <WrappedContainerForm
+          wrappedComponentRef={form => (this.formRef = form)}
+          repo={this.props.containerRepo}
+        />
       </Modal>
     );
   }

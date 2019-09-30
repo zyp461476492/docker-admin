@@ -5,6 +5,7 @@ import styles from './panel.css';
 import ImageSearchModel from '../dialog/imageSearchDialog';
 import ImagePullModel from '../dialog/imagePullDialog';
 import ImageHistroyDialog from '../dialog/imageHistroyDialog';
+import ContainerCreateDialog from '../dialog/containerCreateDialog';
 
 const imageColumn = [
   {
@@ -39,6 +40,8 @@ class ImagePanel extends React.Component {
     searchVisible: false,
     pullVisible: false,
     historyVisible: false,
+    createVisible: false,
+    containerRepo: '',
     selectedRowKeys: [],
     selectedRow: [],
   };
@@ -53,12 +56,15 @@ class ImagePanel extends React.Component {
 
   selectRow = record => {
     const selectedRowKeys = [...this.state.selectedRowKeys];
+    const selectedRow = [...this.state.selectedRow];
     if (selectedRowKeys.indexOf(record.id) >= 0) {
       selectedRowKeys.splice(selectedRowKeys.indexOf(record.id), 1);
+      selectedRow.splice(selectedRow.indexOf(record), 1);
     } else {
       selectedRowKeys.push(record.id);
+      selectedRow.push(record);
     }
-    this.setState({ selectedRowKeys });
+    this.setState({ selectedRowKeys, selectedRow });
   };
 
   onSelectedRowKeysChange = selectedRowKeys => {
@@ -113,6 +119,12 @@ class ImagePanel extends React.Component {
     return data;
   };
 
+  toggleCreateDialog = () => {
+    this.setState({
+      createVisible: !this.state.createVisible,
+    });
+  };
+
   toggleSearchDialog = () => {
     this.setState({
       searchVisible: !this.state.searchVisible,
@@ -135,6 +147,19 @@ class ImagePanel extends React.Component {
     }
   };
 
+  containerCreate = () => {
+    const length = this.state.selectedRowKeys.length;
+    if (length === 1) {
+      const imageName = this.state.selectedRow[0].repo;
+      this.setState({
+        containerRepo: imageName,
+      });
+      this.toggleCreateDialog();
+    } else {
+      message.warning('请选择一条数据', 1);
+    }
+  };
+
   imageDel = () => {
     const length = this.state.selectedRowKeys.length;
     if (length <= 0) {
@@ -142,7 +167,6 @@ class ImagePanel extends React.Component {
     } else if (length === 1) {
       const assetId = this.props.assetId;
       const imageId = this.state.selectedRowKeys[0];
-      console.log(`assetId:${assetId} imageId ${imageId}`);
       message.loading('删除中...');
       this.props.dispatch({
         type: 'dockerBasic/imageDel',
@@ -176,7 +200,7 @@ class ImagePanel extends React.Component {
         payload: {
           assetId,
           imageId,
-        }
+        },
       });
       this.toggleHistoryDialog();
     } else {
@@ -187,9 +211,23 @@ class ImagePanel extends React.Component {
   clearSelect = () => {
     this.setState({
       selectedRow: [],
-      selectedRowKeys: []
+      selectedRowKeys: [],
     });
-  }
+  };
+
+  refreshInfo = () => {
+    this.queryContainerList();
+    this.queryBasicInfo();
+    this.clearSelect();
+  };
+
+  queryContainerList = () => {
+    const id = this.props.assetId;
+    this.props.dispatch({
+      type: 'dockerBasic/containerList',
+      payload: { id },
+    });
+  };
 
   render() {
     const { selectedRowKeys } = this.state;
@@ -216,20 +254,30 @@ class ImagePanel extends React.Component {
           visible={this.state.pullVisible}
           close={this.togglePullDialog}
         />
+        <ContainerCreateDialog
+          assetId={this.props.assetId}
+          visible={this.state.createVisible}
+          close={this.toggleCreateDialog}
+          containerRepo={this.state.containerRepo}
+          refreshInfo={this.refreshInfo}
+        />
         <Card
           extra={
             <div className={styles.btn_block}>
+              <Button onClick={this.containerCreate} icon="plus">
+                新建容器
+              </Button>
               <Button icon="plus" onClick={this.togglePullDialog}>
                 拉取
               </Button>
               <Button icon="edit" onClick={this.toggleSearchDialog}>
                 搜索
               </Button>
-              <Button icon="delete" type="danger" onClick={this.imageDel}>
-                删除
-              </Button>
               <Button icon="history" onClick={this.imageHistory}>
                 历史
+              </Button>
+              <Button icon="delete" type="danger" onClick={this.imageDel}>
+                删除
               </Button>
             </div>
           }
