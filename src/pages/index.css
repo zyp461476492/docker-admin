@@ -7,6 +7,17 @@
   display: block;
 }
 
+.home_body {
+  position: absolute;
+  top: 20%;
+  bottom: 18%;
+  left: 20%;
+  right: 20%;
+  margin-top: 10px;
+  display: block;
+  background-color: #FFFFFF;
+}
+
 .container_body {
   position: absolute;
   top: 20%;

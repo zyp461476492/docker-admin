@@ -6,7 +6,6 @@ import {
   Row,
   Col,
   Table,
-  Tag,
   Button,
   Form,
   Modal,
@@ -38,16 +37,6 @@ const columns = [
     title: 'API版本',
     dataIndex: 'version',
     key: 'version',
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    render: status => {
-      const syncTag = <Tag color="green">在线</Tag>;
-      const failTag = <Tag color="red">离线</Tag>;
-      return status === '1' ? syncTag : failTag;
-    },
   },
 ];
 
@@ -206,35 +195,18 @@ class DockerAssetList extends React.Component {
       selectedRowKeys,
       onChange: this.onSelectedRowKeysChange,
     };
-    const onlineTip = StatusTip({
-      title: '在线数量',
-      desc: '同步时可以访问到的资源数量',
-      value: 100,
-    });
-    const offlineTip = StatusTip({
-      title: '离线数量',
-      desc: '同步时无法访问资源的数量',
-      value: 100,
-    });
-    const syncDateTip = StatusTip({
-      title: '同步时间',
-      desc: '最新同步时间',
-      value: new Date().toLocaleString(),
+    const mainTip = StatusTip({
+      title: '配置',
+      desc: '管理基础资源',
+      value: '基础资源配置',
     });
     return (
       <div>
         <div className={style.container_header}>
           <Row type="flex">
-            <Col span={8}>
-              <Card bordered={false}>{onlineTip}</Card>
+            <Col span={24}>
+              <Card bordered={false}>{mainTip}</Card>
               <em />
-            </Col>
-            <Col span={8}>
-              <Card bordered={false}>{offlineTip}</Card>
-              <em />
-            </Col>
-            <Col span={8}>
-              <Card bordered={false}>{syncDateTip}</Card>
             </Col>
           </Row>
         </div>
