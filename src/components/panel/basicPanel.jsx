@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import styles from './panel.css';
-import { Skeleton, Descriptions, Card, Row, Col } from 'antd';
+import { Result, Skeleton, Descriptions, Card, Row, Col } from 'antd';
 import StatusTip from '../../components/status-tip/statusTip';
 import ReactJson from 'react-json-view';
 
@@ -261,6 +261,8 @@ class BasicPanel extends React.Component {
           </div>
         </div>
       );
+    } else if (this.props.dockerInfo) {
+      context = <Result status="error" title="查询失败" subTitle={this.props.dockerInfo.Info} />;
     }
     return context;
   }

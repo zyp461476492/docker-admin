@@ -7,6 +7,15 @@
   display: block;
 }
 
+.home_header {
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  right: 20%;
+  background-color: #FFFFFF;
+  display: block;
+}
+
 .home_body {
   position: absolute;
   top: 20%;
