@@ -230,7 +230,6 @@ class DockerAssetList extends React.Component {
                         onCreate={this.handleCreate}
                         loading={this.props.loading}
                       />
-                      <Button icon="edit">修改</Button>
                       <Button icon="delete" type="danger" onClick={this.handlerDelete}>
                         删除
                       </Button>
