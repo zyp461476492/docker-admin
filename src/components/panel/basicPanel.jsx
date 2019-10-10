@@ -56,7 +56,7 @@ class BasicPanel extends React.Component {
                     <StatusTip
                       type="success"
                       title="运行中"
-                      desc="镜像数量"
+                      desc="运行中的容器数量"
                       value={this.props.dockerInfo.Obj.ContainersRunning}
                     />
                   </Card>
@@ -68,7 +68,7 @@ class BasicPanel extends React.Component {
                     <StatusTip
                       type="warn"
                       title="已暂停"
-                      desc="镜像数量"
+                      desc="暂停的容器数量"
                       value={this.props.dockerInfo.Obj.ContainersPaused}
                     />
                   </Card>
@@ -80,7 +80,7 @@ class BasicPanel extends React.Component {
                     <StatusTip
                       type="error"
                       title="已停止"
-                      desc="镜像数量"
+                      desc="停止运行的容器数量"
                       value={this.props.dockerInfo.Obj.ContainersStopped}
                     />
                   </Card>
